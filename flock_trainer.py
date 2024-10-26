@@ -105,6 +105,21 @@ def send_flock_model(model_id):
         
     return jsonify({"message": f"FlockModel sent to connected {len(nodes)}"}), 200
 
+@app.route('/receive_model_weights', methods=['POST'])
+def receive_model_weights():
+    """
+    Input route to receive the trained FlockModel's weights from a node.
+    """
+    global model
+    data = request.json
+    node_address = data.get('node_address')
+    serialized_weights = data.get('weights')
+    weights = pickle.loads(serialized_weights)
+    # model.set_weights(weights)
+    # Maybe add the weights to a list and aggregate them later?
+    # TODO: Aggregate weights from all nodes
+    logger.info(f"Model weights received from node {node_address}")
+    return jsonify({"message": f"Model weights received successfully from node {node_address}"}), 200
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)

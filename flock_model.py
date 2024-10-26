@@ -27,8 +27,22 @@ class FlockModel:
         """
         Hyper parameters
         """
-        self.model = model
-        self.loss_function = loss_function
+        if model == "CNN":
+            self.model = CNNClassifier()
+        elif model == "LR":
+            self.model = LogisticRegressionModel()
+        elif model == "DT":
+            self.model = DecisionTreeModel()
+        
+        if loss_function == "BCE":
+            self.loss_function = torch.nn.BCELoss()
+        elif loss_function == "MSE":
+            self.loss_function = torch.nn.MSELoss()
+        elif loss_function == "CE":
+            self.loss_function = torch.nn.CrossEntropyLoss()
+        elif loss_function == "NLL":
+            self.loss_function = torch.nn.NLLLoss()
+            
         self.batch_size = batch_size
         self.epochs = epochs
         self.classes = classes

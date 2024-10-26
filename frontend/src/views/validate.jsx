@@ -1,10 +1,11 @@
-// Chakra imports
-import { Box, SimpleGrid, Input, Button, Text, Flex } from "@chakra-ui/react";
+// Validate.jsx
+
+import React, { useState } from "react";
+import { Box, SimpleGrid, Input, Button, Text, Flex, Stack } from "@chakra-ui/react";
 import ComplexTable from "views/admin/dataTables/components/ComplexTable-Validate";
 import PastTasks from "views/admin/dataTables/components/PastTasks"; // Import the PastTasks component
 import { columnsDataComplex } from "views/admin/dataTables/variables/columnsData";
 import tableDataComplex from "views/admin/dataTables/variables/tableDataComplex.json";
-import React, { useState } from "react";
 
 export default function Validate() {
   const [selectedTask, setSelectedTask] = useState(null);
@@ -19,9 +20,9 @@ export default function Validate() {
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }} h="100vh" overflow="auto">
-      <SimpleGrid columns={{ base: 1, md: 5 }} spacing="20px" h="100%">
-        {/* Main Table - Takes up 80% of the grid */}
-        <Box gridColumn={{ base: "span 1", md: "span 4" }}>
+      <Stack spacing="20px">
+        {/* Main Table for current tasks */}
+        <Box>
           <ComplexTable
             columnsData={columnsDataComplex}
             tableData={tableDataComplex}
@@ -55,11 +56,11 @@ export default function Validate() {
           )}
         </Box>
 
-        {/* Past Validated Tasks - Takes up 20% of the grid */}
-        <Box gridColumn={{ base: "span 1", md: "span 1" }}>
+        {/* Past Validated Tasks Section */}
+        <Box>
           <PastTasks /> {/* Displays past validated tasks */}
         </Box>
-      </SimpleGrid>
+      </Stack>
     </Box>
   );
 }

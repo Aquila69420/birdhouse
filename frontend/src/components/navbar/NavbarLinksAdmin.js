@@ -214,17 +214,6 @@ export default function HeaderLinks(props) {
         />
       </Button>
       <Menu>
-        <MenuButton p="0px">
-          <Avatar
-            _hover={{ cursor: 'pointer' }}
-            color="white"
-            name="Adela Parkson"
-            bg="#11047A"
-            size="sm"
-            w="40px"
-            h="40px"
-          />
-        </MenuButton>
         <MenuList
           boxShadow={shadow}
           p="0px"

@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import logging
 import pickle
 from flock_model import FlockModel
@@ -17,6 +18,7 @@ token_manager = TokenManager(mongo_uri, db_name)
 
 # Initialize the Flask app
 app = Flask(__name__)
+CORS(app)
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

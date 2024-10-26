@@ -22,7 +22,7 @@ export default function Dashboard(props) {
 
   // Function to get the active route name based on the current path
   const getActiveRoute = (routes) => {
-    let activeRoute = 'Default Brand Text';
+    let activeRoute = '';
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse) {
         let collapseActiveRoute = getActiveRoute(routes[i].items);

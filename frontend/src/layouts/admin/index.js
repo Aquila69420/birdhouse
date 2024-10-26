@@ -6,19 +6,21 @@ import Navbar from 'components/navbar/NavbarAdmin.js';
 import Sidebar from 'components/sidebar/Sidebar.js';
 import { SidebarContext } from 'contexts/SidebarContext';
 import React, { useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import routes from 'routes.js';
 
-// Custom Chakra theme
 export default function Dashboard(props) {
   const { ...rest } = props;
-  // states and functions
   const [fixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
-  // functions for changing the states from components
+  const location = useLocation(); // Track the current path
+
+  // Define getRoute function to check if the current route is '/admin/full-screen-maps'
   const getRoute = () => {
-    return window.location.pathname !== '/admin/full-screen-maps';
+    return location.pathname !== '/admin/full-screen-maps';
   };
+
+  // Function to get the active route name based on the current path
   const getActiveRoute = (routes) => {
     let activeRoute = 'Default Brand Text';
     for (let i = 0; i < routes.length; i++) {
@@ -33,15 +35,15 @@ export default function Dashboard(props) {
           return categoryActiveRoute;
         }
       } else {
-        if (
-          window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-        ) {
+        // Check if the current path matches the route
+        if (location.pathname === routes[i].layout + routes[i].path) {
           return routes[i].name;
         }
       }
     }
     return activeRoute;
   };
+
   const getActiveNavbar = (routes) => {
     let activeNavbar = false;
     for (let i = 0; i < routes.length; i++) {
@@ -56,15 +58,14 @@ export default function Dashboard(props) {
           return categoryActiveNavbar;
         }
       } else {
-        if (
-          window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-        ) {
+        if (location.pathname === routes[i].layout + routes[i].path) {
           return routes[i].secondary;
         }
       }
     }
     return activeNavbar;
   };
+
   const getActiveNavbarText = (routes) => {
     let activeNavbar = false;
     for (let i = 0; i < routes.length; i++) {
@@ -79,15 +80,14 @@ export default function Dashboard(props) {
           return categoryActiveNavbar;
         }
       } else {
-        if (
-          window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-        ) {
+        if (location.pathname === routes[i].layout + routes[i].path) {
           return routes[i].messageNavbar;
         }
       }
     }
     return activeNavbar;
   };
+
   const getRoutes = (routes) => {
     return routes.map((route, key) => {
       if (route.layout === '/admin') {
@@ -102,9 +102,9 @@ export default function Dashboard(props) {
       }
     });
   };
-  document.documentElement.dir = 'ltr';
+
   const { onOpen } = useDisclosure();
-  document.documentElement.dir = 'ltr';
+
   return (
     <Box>
       <Box>
@@ -134,7 +134,7 @@ export default function Dashboard(props) {
                 <Navbar
                   onOpen={onOpen}
                   logoText={'Horizon UI Dashboard PRO'}
-                  brandText={getActiveRoute(routes)}
+                  brandText={getActiveRoute(routes)} // Updated getActiveRoute
                   secondary={getActiveNavbar(routes)}
                   message={getActiveNavbarText(routes)}
                   fixed={fixed}

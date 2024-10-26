@@ -20,9 +20,10 @@ import GraphIcon from "./images/graph.svg"
 // Admin Imports
 import MainDashboard from 'views/admin/default';
 import NFTMarketplace from 'views/admin/marketplace';
-import Profile from 'views/admin/profile';
+// import Profile from 'views/admin/profile';
 import DataTables from 'views/tasks';
 import Validate from 'views/validate';
+import Profile  from 'views/profile';
 import Training from 'views/TrainingPage';
 import RTL from 'views/admin/rtl';
 

@@ -7,7 +7,15 @@ import {
   MdHome,
   MdLock,
   MdOutlineShoppingCart,
+  MdAccountTree,
+  MdPolyline,
+  MdAddTask,
+  MdListAlt,
+  MdScheduleSend
 } from 'react-icons/md';
+
+
+import GraphIcon from "./images/graph.svg"
 
 // Admin Imports
 import MainDashboard from 'views/admin/default';
@@ -20,13 +28,13 @@ import RTL from 'views/admin/rtl';
 import SignInCentered from 'views/auth/signIn';
 
 const routes = [
-  /*{
+  {
     name: 'Main Dashboard',
     layout: '/admin',
     path: '/default',
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
     component: <MainDashboard />,
-  },*/
+  },
   /*{
     name: 'NFT Marketplace',
     layout: '/admin',
@@ -43,10 +51,31 @@ const routes = [
     secondary: true,
   },*/
   {
-    name: 'Data Tables',
+    name: 'Task Creation',
     layout: '/admin',
-    icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
-    path: '/data-tables',
+    icon: <Icon as={MdAddTask} width="20px" height="20px" color="inherit" />,
+    path: '/task-creation',
+    component: <DataTables />,
+  },
+  {
+    name: 'Training Node',
+    layout: '/admin',
+    icon: <Icon as={MdPolyline} width="20px" height="20px" color="inherit" />,
+    path: '/data-tables1',
+    component: <DataTables />,
+  },
+  {
+    name: 'Validate',
+    layout: '/admin',
+    icon: <Icon as={MdListAlt} width="20px" height="20px" color="inherit" />,
+    path: '/data-tables2',
+    component: <DataTables />,
+  },
+  {
+    name: 'Delegate',
+    layout: '/admin',
+    icon: <Icon as={MdScheduleSend} width="20px" height="20px" color="inherit" />,
+    path: '/data-tables3',
     component: <DataTables />,
   },
   {
@@ -58,8 +87,8 @@ const routes = [
   },
   {
     name: 'Sign In',
-    layout: '/auth',
-    path: '/sign-in',
+    layout: '/sign-in',
+    path: '/',
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
     component: <SignInCentered />,
   },

@@ -136,38 +136,13 @@ export default function HeaderLinks(props) {
             </Text>
           </Flex>
           <Flex flexDirection="column">
-            <MenuItem
-              _hover={{ bg: 'none' }}
-              _focus={{ bg: 'none' }}
-              px="0"
-              borderRadius="8px"
-              mb="10px"
-            >
-              <ItemContent info="Horizon UI Dashboard PRO" />
-            </MenuItem>
-            <MenuItem
-              _hover={{ bg: 'none' }}
-              _focus={{ bg: 'none' }}
-              px="0"
-              borderRadius="8px"
-              mb="10px"
-            >
-              <ItemContent info="Horizon Design System Free" />
-            </MenuItem>
           </Flex>
         </MenuList>
       </Menu>
 
       <Menu>
         <MenuButton p="0px">
-          <Icon
-            mt="6px"
-            as={MdInfoOutline}
-            color={navbarIcon}
-            w="18px"
-            h="18px"
-            me="10px"
-          />
+
         </MenuButton>
         <MenuList
           boxShadow={shadow}

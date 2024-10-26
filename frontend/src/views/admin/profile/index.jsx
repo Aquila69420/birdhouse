@@ -103,15 +103,6 @@ export default function Overview() {
           minH='365px'
           pe='20px'
         />
-        <Notifications
-          used={25.6}
-          total={50}
-          gridArea={{
-            base: "3 / 1 / 4 / 2",
-            lg: "2 / 1 / 3 / 3",
-            "2xl": "1 / 3 / 2 / 4",
-          }}
-        />
       </Grid>
     </Box>
   );

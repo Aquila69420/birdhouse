@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
   Box,
   Button,
@@ -49,9 +49,11 @@ function SignIn() {
           <FormLabel color={textColor}>Wallet Address</FormLabel>
           <Input type="text" placeholder="Wallet Address" />
         </FormControl>
+        <Link to={"/admin"}>
         <Button colorScheme="teal" w="100%" mb="12px">
           Sign In
         </Button>
+        </Link>
       </Box>
     </Flex>
   );

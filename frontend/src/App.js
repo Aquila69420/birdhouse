@@ -4,6 +4,7 @@ import {} from 'react-router-dom';
 import AuthLayout from './layouts/auth';
 import AdminLayout from './layouts/admin';
 import RTLLayout from './layouts/rtl';
+import SignInCentered from 'views/auth/signIn';
 import {
   ChakraProvider,
   // extendTheme
@@ -31,7 +32,7 @@ export default function Main() {
             <RTLLayout theme={currentTheme} setTheme={setCurrentTheme} />
           }
         />
-        <Route path="/" element={<Navigate to="/admin" replace />} />
+        <Route path="/" element={<SignInCentered />} />
       </Routes>
     </ChakraProvider>
   );

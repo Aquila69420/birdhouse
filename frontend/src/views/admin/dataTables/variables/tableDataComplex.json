@@ -1,26 +1,38 @@
 [
   {
-    "name":"Marketplace",
-    "status": "Approved",
-    "date": "24.Jan.2021",
-    "progress": 75.5  
+    "task-id": "1",
+    "task-name": "Text2SQL Agent Model",
+    "task-status": "Finalized",
+    "date": "Jul 19, 2024",
+    "progress": 100,
+    "percentage": 100,
+    "description": "Help develop a model that let people effortlessly query databases using simple, natural language commands, without the need for complex SQL syntax. Whether you're a business analyst, data scientist, or a developer, the Text2SQL model bridges the gap between you and your data, making data retrieval intuitive and efficient. Training data for this task is based on some open-sourced Text2SQL dataset, it may contain some inaccurate queries. The task creator has done extensive cleaning and manual review for the final validation set."
   },
   {
-    "name":"Marketplace",
-    "status": "Disable",
-    "date": "30.Dec.2021",
-    "progress": 25.5  
+    "task-id": "2",
+    "task-name": "Text2SQL Agent Model",
+    "task-status": "Submission",
+    "date": "Jul 19, 2024",
+    "progress": 34,
+    "percentage": 4,
+    "description": "The Text2SQL Agent Model is a model that converts natural language questions into SQL queries."
   },
   {
-    "name":"Marketplace",
-    "status": "Error",
-    "date": "20.May.2021",
-    "progress": 90  
+    "task-id": "3",
+    "task-name": "Text2SQL Agent Model",
+    "task-status": "Finalized",
+    "date": "Jul 19, 2024",
+    "progress": 100,
+    "percentage": 34,
+    "description": "The Text2SQL Agent Model is a model that converts natural language questions into SQL queries."
   },
   {
-    "name":"Marketplace",
-    "status": "Approved",
-    "date": "12.Jul.2021",
-    "progress": 50.5  
+    "task-id": "4",
+    "task-name": "Text2SQL Agent Model",
+    "task-status": "Finalized",
+    "date": "Jul 19, 2024",
+    "progress": 90,
+    "percentage": 45,
+    "description": "The Text2SQL Agent Model is a model that converts natural language questions into SQL queries."
   }
 ]

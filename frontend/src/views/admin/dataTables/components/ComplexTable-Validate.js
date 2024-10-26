@@ -14,6 +14,9 @@ import {
   Tr,
   useColorModeValue,
   Collapse,
+  Checkbox,
+  Input,
+  Button,
 } from '@chakra-ui/react';
 import {
   createColumnHelper,
@@ -32,18 +35,54 @@ const columnHelper = createColumnHelper();
 export default function ComplexTable(props) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState([]);
+  const [expandedRows, setExpandedRows] = React.useState({});
+  const [selectedTask, setSelectedTask] = React.useState(null);
+  const [tokens, setTokens] = React.useState("");
+  
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-  const [expandedRows, setExpandedRows] = React.useState({});
 
-  const toggleRowExpansion = (rowId) => {
+  // Toggle row expansion for expand icon only
+  const toggleRowExpansion = (row) => {
+    const rowId = row.id;
+    setExpandedRows((prevState) => {
+      const isExpanding = !prevState[rowId];
+      
+      // Clear the selected task if the row is collapsing
+      if (!isExpanding) {
+        setSelectedTask(null);
+      } else {
+        setSelectedTask(row.original); // Set the selected task if expanding
+      }
+
+      return {
+        ...prevState,
+        [rowId]: isExpanding,
+      };
+    });
+  };
+
+  // Handle task selection
+  const handleCheckboxToggle = (row) => {
+    const rowId = row.id;
     setExpandedRows((prevState) => ({
       ...prevState,
       [rowId]: !prevState[rowId],
     }));
+    setSelectedTask(row.original); // Set the selected task for staking input
   };
 
+  // Columns configuration
   const columns = [
+    columnHelper.display({
+      id: 'select',
+      cell: (info) => (
+        <Checkbox
+          isChecked={selectedTask === info.row.original}
+          onChange={() => handleCheckboxToggle(info.row)}
+        />
+      ),
+    }),
     columnHelper.accessor('task-id', {
       id: 'task-id',
       header: () => (
@@ -144,28 +183,9 @@ export default function ComplexTable(props) {
         </Flex>
       ),
     }),
-    columnHelper.accessor('percentage', {
-      id: 'percentage',
-      header: () => (
-        <Text fontSize={{ sm: '10px', lg: '12px' }} color="gray.400">
-          % IN DAILY REWARDS POOL
-        </Text>
-      ),
-      cell: (info) => (
-        <Flex align="center">
-          <Progress
-            variant="table"
-            colorScheme="brandScheme"
-            h="8px"
-            w="108px"
-            value={info.getValue()}
-          />
-        </Flex>
-      ),
-    }),
     columnHelper.accessor('expand', {
       id: 'expand',
-      header: () => null, // No header for the expand icon column
+      header: () => null,
       cell: (info) => (
         <Icon
           as={expandedRows[info.row.id] ? MdExpandLess : MdExpandMore}
@@ -173,8 +193,8 @@ export default function ComplexTable(props) {
           h="20px"
           cursor="pointer"
           onClick={(e) => {
-            e.stopPropagation(); // Prevents row click from firing twice
-            toggleRowExpansion(info.row.id);
+            e.stopPropagation();
+            toggleRowExpansion(info.row);
           }}
         />
       ),
@@ -188,14 +208,13 @@ export default function ComplexTable(props) {
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    debugTable: true,
   });
 
   return (
     <Card flexDirection="column" w="100%" px="0px" overflowX="auto">
       <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
         <Text color={textColor} fontSize="22px" fontWeight="700">
-          My Tasks
+          Current Tasks
         </Text>
         <Menu />
       </Flex>
@@ -205,13 +224,7 @@ export default function ComplexTable(props) {
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <Th
-                    key={header.id}
-                    borderColor={borderColor}
-                    cursor="pointer"
-                    onClick={header.column.getToggleSortingHandler()}
-                    _hover={{ cursor: 'pointer' }}
-                  >
+                  <Th key={header.id} borderColor={borderColor}>
                     <Flex justifyContent="space-between" align="center">
                       {flexRender(header.column.columnDef.header, header.getContext())}
                     </Flex>
@@ -224,9 +237,9 @@ export default function ComplexTable(props) {
             {table.getRowModel().rows.map((row) => (
               <React.Fragment key={row.id}>
                 <Tr
-                  onClick={() => toggleRowExpansion(row.id)}
                   cursor="pointer"
-                  _hover={{ bg: 'gray.100' }} // Adds a subtle background change on hover
+                  onClick={() => toggleRowExpansion(row)}
+                  _hover={{ bg: 'gray.100' }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <Td key={cell.id} borderColor="transparent">
@@ -238,9 +251,22 @@ export default function ComplexTable(props) {
                   <Td colSpan={columns.length} p="0">
                     <Collapse in={expandedRows[row.id]} animateOpacity>
                       <Box p="20px" bg="gray.50" borderBottomRadius="md">
-                        <Text fontSize="sm" color="gray.600">
+                        <Text fontSize="sm" color="gray.600" mb="4">
                           {row.original.description}
                         </Text>
+                        <Flex direction="column" align="center">
+                          <Input
+                            placeholder="Enter tokens amount"
+                            type="number"
+                            value={tokens}
+                            onChange={(e) => setTokens(e.target.value)}
+                            width="300px"
+                            mb="4"
+                          />
+                          <Button colorScheme="brandScheme" bg="brand.500" color="white">
+                            Stake FML
+                          </Button>
+                        </Flex>
                       </Box>
                     </Collapse>
                   </Td>

@@ -21,7 +21,8 @@ import GraphIcon from "./images/graph.svg"
 import MainDashboard from 'views/admin/default';
 import NFTMarketplace from 'views/admin/marketplace';
 import Profile from 'views/admin/profile';
-import DataTables from 'views/admin/dataTables';
+import DataTables from 'views/tasks';
+import Validate from 'views/validate';
 import RTL from 'views/admin/rtl';
 
 // Auth Imports
@@ -69,7 +70,7 @@ const routes = [
     layout: '/admin',
     icon: <Icon as={MdListAlt} width="20px" height="20px" color="inherit" />,
     path: '/data-tables2',
-    component: <DataTables />,
+    component: <Validate />,
   },
   {
     name: 'Delegate',

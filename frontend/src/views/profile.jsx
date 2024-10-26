@@ -7,7 +7,7 @@ import TokenBalanceCard from "views/admin/dataTables/components/TokenBalanceCard
 
 // Placeholder for user data
 const userData = {
-  name: "Adela Parkson",
+  name: "Atharva Pawar",
   walletId: "0x1234...abcd",
   tokens: 1250,
   avatarSrc: "assets/img/avatars/avatar4.png"  // Use a path to the avatar image

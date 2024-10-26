@@ -9,6 +9,12 @@ from torch.utils.data import DataLoader
 from transformers import AdamW
 import io
 
+from client import TokenManager
+
+mongo_uri = "mongodb://localhost:27017/"
+db_name = "token_db"
+token_manager = TokenManager(mongo_uri, db_name)
+
 # Initialize the Flask app
 app = Flask(__name__)
 
@@ -20,6 +26,55 @@ global model
 global trained 
 trained = False
 # user_address = "http://10.154.36.81:5000"
+
+@app.route('/login_node', methods=['POST'])
+def login():
+    """
+    Route to login a node based on wallet ID.
+    """
+    data = request.json
+    wallet_id = data.get('wallet_id')
+    success = token_manager.login(wallet_id)
+    if not success:
+        return jsonify({"message": f"User {wallet_id} not found"}), 404
+    return jsonify({"message": f"User {wallet_id} logged in successfully"}), 200
+
+@app.route('/register_node', methods=['POST'])
+def register():
+    """
+    Route to register a new client with an initial amount of tokens.
+    """
+    data = request.json
+    wallet_id = data.get('wallet_id')
+    initial_tokens = data.get('initial_tokens', 10)
+    token_manager.register_client(wallet_id, initial_tokens)
+    return jsonify({"message": f"User {wallet_id} registered successfully"}), 201
+
+@app.route('/stake_tokens', methods=['POST'])
+def stake_tokens():
+    """
+    Route to stake tokens for training.
+    Tokens are staked before training and are returned after the accuracy is sent back to the trainer.
+    """
+    data = request.json
+    wallet_id = data.get('wallet_id')
+    tokens = data.get('tokens')
+    if not token_manager.update_client_tokens(wallet_id, tokens):
+        return jsonify({"message": "Insufficient tokens"}), 400
+    return jsonify({"message": f"{tokens} tokens staked successfully"}), 200
+
+@app.route('/receive_tokens', methods=['POST'])
+def receive_tokens():
+    """
+    Route to receive tokens for training.
+    Note: Tokens are received after accuracy is sent back to the trainer and total received are original tokens staked + reward tokens.
+    Reward tokens are client's paid tokens distributed equally among all nodes in the network, i.e., C/N
+    """
+    data = request.json
+    wallet_id = data.get('wallet_id')
+    tokens = data.get('tokens')
+    token_manager.update_client_tokens(wallet_id, tokens)
+    return jsonify({"message": f"{tokens} tokens received successfully"}), 200
 
 # Join network - server
 @app.route('/join_network', methods=['POST'])

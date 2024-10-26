@@ -63,9 +63,9 @@ This repository hosts the code for Birdhouse, a decentralized Federated Learning
 - **User Roles**: Support for task creators/delegators and training/validation nodes.
 - **Comprehensive UI**: Frontend for model setup, training node management, and performance tracking.
 - **Attack Mitigation**: Security features against Sybil, DoS, Free-rider, Lookup, and FL model poisoning attacks.
-- **Temporary cURL Command Support**: While the model creation UI is under development, we support cURL-based model setup.
-- **Future Proof**: Plans for AI Marketplace and FL alliance with upcoming model creation UI and validation nodes UI.
-
+<!-- - **Temporary cURL Command Support**: While the model creation UI is under development, we support cURL-based model setup.
+- **Future Proof**: Plans for AI Marketplace and FL alliance with upcoming model creation UI and validation nodes UI. 
+-->
 ## Flock.io Principles
 
 ## Getting Started

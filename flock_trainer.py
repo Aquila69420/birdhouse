@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 global model
 nodes = set()  # To store connected nodes by their addresses
+weights_dict = {}  # To store weights from all nodes
 
 @app.route('/join_network', methods=['POST'])
 def join_network():
@@ -115,11 +116,25 @@ def receive_model_weights():
     node_address = data.get('node_address')
     serialized_weights = data.get('weights')
     weights = pickle.loads(serialized_weights)
-    # model.set_weights(weights)
     # Maybe add the weights to a list and aggregate them later?
+    weights_dict[node_address] = weights
     # TODO: Aggregate weights from all nodes
     logger.info(f"Model weights received from node {node_address}")
     return jsonify({"message": f"Model weights received successfully from node {node_address}"}), 200
+
+@app.route('/aggregate_weights', methods=['POST'])
+def aggregate_weights():
+    """
+    Input route to aggregate weights from all nodes.
+    """
+    # Aggregate weights from all nodes
+    node_selection_for_weights = request.json.get('node_selection_for_weights') # node addresses to select for aggregation
+    if node_selection_for_weights:
+        aggregated_weights_dict = {k: v for k, v in weights_dict.items() if k in node_selection_for_weights}
+    aggregated_weights = model.aggregate(aggregated_weights_dict.values())
+    aggregated_accuracy = model.evaluate(aggregated_weights)
+    logger.info("Weights aggregated")
+    return jsonify({"message": "Weights aggregated successfully", "aggregated_accuracy": aggregated_accuracy}), 200
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)

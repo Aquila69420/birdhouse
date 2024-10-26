@@ -1,13 +1,10 @@
 import torch
 import io
 import logging
-from flock_sdk import FlockSDK
 from data_preprocessing import IndexesDataset, get_loader
-from pandas import DataFrame
 import numpy as np
 import random
 import json
-import torchvision
 from model_class import *
 
 
@@ -50,6 +47,7 @@ class FlockModel:
         self.lr = lr
         self.emb_size = emb_size
         self.vocab_size = vocab_size
+        # self.progress = 0
 
         """
             Device setting
@@ -58,17 +56,21 @@ class FlockModel:
             device = "cuda"
         else:
             device = "cpu"
-        self.device = torch.device(device)        
+        self.device = torch.device(device)     
+
+    # def calculate_progress(self):
+    #     return self.progress   
     
     def init_dataset(self, dataset_path: str) -> None:
         self.datasetpath = dataset_path
         with open(dataset_path, "r") as f:
             dataset = json.load(f)
-        dataset_df = IndexesDataset(dataset, max_samples_count=10000, device=device)
+        dataset_df = IndexesDataset(dataset, max_samples_count=10000, device=self.device)
         logging.info("Processing dataset")
         self.test_data_loader = get_loader(
-            dataset_df, batch_size=batch_size
+            dataset_df, batch_size=self.batch_size
         )
+        self.dataset_size = len(dataset_df)
 
 
     def get_starting_model(self):
@@ -119,6 +121,7 @@ class FlockModel:
 
                 train_loss += loss.item() * inputs.size(0)
                 predicted = torch.round(outputs).squeeze()
+                # self.progress += len(inputs)
                 train_total += targets.size(0)
                 train_correct += (predicted == targets.squeeze()).sum().item()
                 if batch_idx < 2:

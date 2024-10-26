@@ -30,6 +30,10 @@ class LLMFlockModel:
 
         logger.info(f"Loaded model: {self.model_name}")
 
+    # Fine tune
+    def fine_tune(self):
+        pass
+
     def generate_text(self, prompt: str, max_length: int = 50) -> str:
         """
         Generates text from a given prompt using the loaded model.

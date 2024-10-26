@@ -72,8 +72,8 @@ This repository hosts the code for Birdhouse, a decentralized Federated Learning
 
 ### Prerequisites
 
-- **Node.js**: (For the frontend)
-- **Python 3.12**: (For the backend)
+- **Node.js 20.18.0**: (For the frontend)
+- **Python 3.12.2**: (For the backend)
 
 ### Installation
 

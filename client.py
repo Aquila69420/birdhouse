@@ -1,53 +1,11 @@
-# Registration via wallet id (wallet id, tokens) in MongoDB with initial amount of tokens when the user registers
-
-# function to update node's token count and updating the total token count in the network (also stored in MongoDB)
-# x2 - decrement when node places stake, increment when node receives reward
-
-# function to update the user's token count and updating the total token count in the network (also stored in MongoDB)
-# x1 - decrement when user places fee
-
-
 from pymongo import MongoClient
+from base64 import b64decode
 
-mongo_uri = "mongodb+srv://janetjarrontester:qcZnyLVpARV7rDAU@birdhouse.s729d.mongodb.net/?retryWrites=true&w=majority&appName=Birdhouse"
+# Load the MongoDB URI from the file
+with open ("mongo_uri.txt", "r") as myfile:
+    mongo_uri=b64decode(myfile.readline().strip()).decode("utf-8")
 db_name = "token_db"
 collection_name = "tokens"
-
-# # Connect to MongoDB
-# client = MongoClient(mongo_uri)
-# db = client[db_name]
-
-# # Create the collection if it doesn't exist
-# collection = db[collection_name]
-
-# # Initialize the total_tokens collection
-# total_tokens_collection = db['total_tokens']  # This collection will store total tokens
-
-# # Create the collection schema
-# # Example document to initialize the total tokens
-# total_tokens_doc = {
-#     '_id': 'total',  # Identifier for the total tokens document
-#     'count': 1000    # Initialize total tokens to 1000
-# }
-
-# # Insert total tokens document if it doesn't already exist
-# if total_tokens_collection.count_documents({'_id': 'total'}) == 0:
-#     total_tokens_collection.insert_one(total_tokens_doc)
-#     print("Total tokens initialized to 1000.")
-# else:
-#     print("Total tokens document already exists.")
-
-# # Initialize the clients collection with a sample document (optional)
-# sample_client_doc = {
-#     'wallet_id': 'sample_wallet_001',
-#     'tokens': 10  # Initial tokens for the sample client
-# }
-
-# # Insert sample client document if it doesn't already exist
-# if collection.count_documents({'wallet_id': 'sample_wallet_001'}) == 0:
-#     collection.insert_one(sample_client_doc)
-#     print("Sample client added to the clients collection.")
-from pymongo import MongoClient
 
 class TokenManager:
     def __init__(self, mongo_uri: str):

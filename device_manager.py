@@ -7,17 +7,64 @@ import psutil
 import logging
 
 class DeviceManager:
+    """
+    DeviceManager is a class responsible for managing device configurations and settings for machine learning models.
+    It includes methods to load configuration files, check the compute platform, and set up devices for training.
+    Methods:
+        __init__(self, config_file=None):
+            Initializes the DeviceManager with an optional configuration file.
+        load_config(self, config_file):
+            Loads the configuration from a JSON file if provided, otherwise returns an empty dictionary.
+        check_compute_platform(self):
+            Checks the availability of CUDA devices and logs their details. If CUDA is not available, it logs CPU and system memory information.
+            Also runs the nvidia-smi command to check for specific GPU models and sets environment variables if necessary.
+        setup_device(self, model_name, proposer_train_batch_size, proposer_train_micro_batch_size, device_map=None):
+            Sets up the device and DDP (Distributed Data Parallel) settings based on the model name and training parameters.
+                device_map (str or dict, optional): The mapping of devices to be used for training. Defaults to None.
+    """
     def __init__(self, config_file=None):
+        """
+        Initializes the DeviceManager instance.
+
+        Args:
+            config_file (str, optional): Path to the configuration file. Defaults to None.
+
+        Attributes:
+            config (dict): Configuration settings loaded from the config file.
+        """
         self.config = self.load_config(config_file)
         self.check_compute_platform()
 
     def load_config(self, config_file):
+        """
+        Loads configuration from a JSON file.
+
+        Args:
+            config_file (str): Path to the JSON configuration file.
+
+        Returns:
+            dict: The configuration data loaded from the file. Returns an empty dictionary if no file is provided.
+        """
         if config_file:
             with open(config_file, 'r') as file:
                 return json.load(file)
         return {}
 
     def check_compute_platform(self):
+        """
+        Checks the compute platform available on the system, including CUDA-enabled GPUs and CPU information.
+        This method performs the following checks:
+        1. Determines if CUDA is available and logs the number of CUDA devices.
+        2. Logs details of each CUDA device, including its name, memory allocation, and CUDA capability.
+        3. If CUDA is not available, logs CPU model information and total system memory.
+        4. Runs the `nvidia-smi` command to get GPU names and checks for the presence of RTX 4090 GPUs.
+        5. Sets environment variables to disable NCCL P2P and NCCL IB if RTX 4090 GPUs are detected due to incompatibility.
+        Logs warnings and errors appropriately if CUDA is not available or if there are issues running the `nvidia-smi` command.
+        Exceptions:
+            - Logs a warning if CUDA is not available.
+            - Logs an error if there is an issue running the `nvidia-smi` command.
+            - Logs an error if any unexpected exception occurs.
+        """
         try:
             # Check if CUDA is available
             if torch.cuda.is_available():

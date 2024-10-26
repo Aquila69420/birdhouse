@@ -207,7 +207,6 @@ def test_model(object: FlockModel):
     accuracy = object.evaluate()
     return accuracy
 
-# TODO: Implement fine-tuning and evaluating/inferencing for LLM model
 def fine_tune_llm_model(model_obj: LLMFlockModel, dataset_texts, dataset_labels, epochs: int = 3, batch_size: int = 4, learning_rate: float = 2e-5) -> bytes:
     """
     Fine-tunes the LLM model on a sentiment analysis dataset and returns the updated weights.

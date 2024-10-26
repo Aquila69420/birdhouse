@@ -9,6 +9,18 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class LLMFlockModel:
+    """
+    LLMFlockModel is a class for managing and fine-tuning a language model from Hugging Face's model hub.
+    Attributes:
+        model: Loaded Hugging Face model for causal language modeling.
+        tokenizer: Tokenizer corresponding to the loaded model.
+    Methods:
+        __init__(model_name: str, output_dir: str, verbose: bool = False):
+        fine_tune(texts, epochs=3, batch_size=8, learning_rate=5e-5):
+        generate_text(prompt: str, max_length: int = 50) -> str:
+        _run_evaluation_script(test_prompts: list, expected_outputs: list) -> float:
+        save_model(save_path: str):
+    """
     def __init__(self, model_name: str, output_dir: str, verbose: bool = False):
         """
         Initializes the LLMFlockModel with a specified model and output directory.
@@ -134,28 +146,20 @@ class LLMFlockModel:
         self.tokenizer.save_pretrained(save_path)
         logger.info(f"Model saved to {save_path}")
 
-# # Example Usage:
-# if __name__ == "__main__":
-#     # Specify the model you want to use (e.g., "gpt2")
-#     model_name = "gpt2"
-#     output_dir = "./output"
-
-#     # Create an instance of LLMFlockModel
-#     llm_model = LLMFlockModel(model_name=model_name, output_dir=output_dir, verbose=True)
-
-#     # Generate text based on a prompt
-#     prompt = "Once upon a time"
-#     generated_text = llm_model.generate_text(prompt, max_length=50)
-
-#     # Run evaluation (with sample prompts and expected outputs)
-#     test_prompts = ["What is the capital of France?", "Tell me a joke."]
-#     expected_outputs = ["Paris", "Why did the chicken cross the road?"]
-#     llm_model._run_evaluation_script(test_prompts, expected_outputs)
-
-#     # Save the model if needed
-#     llm_model.save_model(output_dir)
 
 class TextDataset(Dataset):
+    """
+    A custom dataset class for handling text data and tokenization.
+    Args:
+        texts (list of str): A list of text strings to be tokenized.
+        tokenizer (PreTrainedTokenizer): A tokenizer instance from the Hugging Face Transformers library.
+        max_length (int, optional): The maximum length of the tokenized sequences. Defaults to 512.
+    Methods:
+        __len__(): Returns the number of text samples in the dataset.
+        __getitem__(idx): Tokenizes the text at the given index and returns the input IDs and attention mask.
+    Returns:
+        tuple: A tuple containing the input IDs and attention mask for the tokenized text.
+    """
     def __init__(self, texts, tokenizer, max_length=512):
         self.texts = texts
         self.tokenizer = tokenizer
@@ -175,6 +179,21 @@ class TextDataset(Dataset):
         return encodings["input_ids"].squeeze(), encodings["attention_mask"].squeeze()
 
 class SentimentTextDataset(TextDataset):
+    """
+    A dataset class for sentiment analysis tasks, extending the TextDataset class.
+    Args:
+        texts (list of str): A list of text samples.
+        labels (list of int): A list of sentiment labels corresponding to the text samples.
+        tokenizer (Tokenizer): A tokenizer instance to convert text samples into token IDs.
+        max_length (int, optional): The maximum length of tokenized sequences. Defaults to 512.
+    Methods:
+        __getitem__(idx):
+            Retrieves the tokenized input IDs, attention mask, and label for a given index.
+            Args:
+                idx (int): The index of the item to retrieve.
+            Returns:
+                tuple: A tuple containing input IDs, attention mask, and the corresponding label as a tensor.
+    """
     def __init__(self, texts, labels, tokenizer, max_length=512):
         super().__init__(texts, tokenizer, max_length)
         self.labels = labels  # Add labels to the dataset

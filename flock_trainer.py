@@ -4,9 +4,12 @@ import logging
 from flock_model import FlockModel
 from llm_flock_model import LLMFlockModel
 import requests
+from base64 import b64decode
 from client import TokenManager
 
-mongo_uri = "mongodb://localhost:27017/"
+# Load the MongoDB URI from the file
+with open ("mongo_uri.txt", "r") as myfile:
+    mongo_uri=b64decode(myfile.readline().strip()).decode("utf-8")
 db_name = "token_db"
 token_manager = TokenManager(mongo_uri, db_name)
 
@@ -87,7 +90,6 @@ def instantiate_flock_model():
 def instantiate_llm_flock_model():
     """
     Input route to instantiate an LLMFlockModel.
-    Expects JSON with 'model_name' and 'output_dir'.
     """
     global model
     data = request.json

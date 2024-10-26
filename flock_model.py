@@ -9,6 +9,31 @@ from model_class import *
 
 
 class FlockModel:
+    """
+    FlockModel is a class designed to handle the training, evaluation, and aggregation of machine learning models.
+    Attributes:
+        model (str): The type of model to be used (supervised learning).
+        loss_function (str): The type of loss function to be used (model/task dependent).
+        classes (list): List of class names.
+        batch_size (int): The size of the batches for training. Default is 256.
+        epochs (int): The number of epochs for training. Default is 1.
+        lr (float): The learning rate for the optimizer. Default is 0.03.
+        emb_size (int): The embedding size. Default is 100.
+        vocab_size (int): The vocabulary size. Default is 30000.
+        device (torch.device): The device to run the model on ('cuda' or 'cpu').
+    Methods:
+        __init__(self, model, loss_function, classes, batch_size=256, epochs=1, lr=0.03, emb_size=100, vocab_size=30000):
+            Initializes the FlockModel with the specified hyperparameters and device settings.
+        init_dataset(self, dataset_path: str) -> None:
+            Initializes the dataset from the given path and prepares the data loader.
+        get_starting_model(self):
+            Returns the initialized model with a fixed random seed for reproducibility.
+        train(self, parameters: bytes | None) -> bytes:
+        evaluate(self, parameters: bytes | None) -> float:
+            Evaluates the model using the provided parameters and returns the accuracy on the dataset.
+        aggregate(self, parameters_list: list[bytes]) -> bytes:
+            Aggregates a list of model weights using averaging and returns the aggregated parameters.
+    """
     def __init__(
             self,
             model, # model: Custom model class object defined by the user
@@ -18,12 +43,8 @@ class FlockModel:
             epochs=1,
             lr=0.03,
             emb_size=100,
-            vocab_size=30000,
-            client_id=1
+            vocab_size=30000
     ):
-        """
-        Hyper parameters
-        """
         if model == "CNN":
             self.model = CNNClassifier()
         elif model == "LR":
@@ -47,21 +68,27 @@ class FlockModel:
         self.lr = lr
         self.emb_size = emb_size
         self.vocab_size = vocab_size
-        # self.progress = 0
 
-        """
-            Device setting
-        """
         if torch.cuda.is_available():
             device = "cuda"
         else:
             device = "cpu"
-        self.device = torch.device(device)     
-
-    # def calculate_progress(self):
-    #     return self.progress   
+        self.device = torch.device(device)      
     
     def init_dataset(self, dataset_path: str) -> None:
+        """
+        Initializes the dataset for the model.
+
+        This method loads a dataset from the specified JSON file path, processes it into a DataFrame,
+        and sets up a data loader for testing purposes. It also logs the processing step and stores
+        the size of the dataset.
+
+        Args:
+            dataset_path (str): The file path to the dataset JSON file.
+
+        Returns:
+            None
+        """
         self.datasetpath = dataset_path
         with open(dataset_path, "r") as f:
             dataset = json.load(f)
@@ -74,6 +101,18 @@ class FlockModel:
 
 
     def get_starting_model(self):
+        """
+        Initializes the starting model with a fixed random seed for reproducibility.
+
+        This method sets the random seed for Python's `random` module, NumPy, and PyTorch 
+        (both CPU and CUDA) to ensure that the model initialization is deterministic. 
+        It then returns an instance of the model with the specified vocabulary size and 
+        embedding size.
+
+        Returns:
+            torch.nn.Module: An instance of the model initialized with the given 
+            vocabulary size and embedding size.
+        """
         seed = 0
         random.seed(seed)
         np.random.seed(seed)
@@ -82,16 +121,14 @@ class FlockModel:
         torch.backends.cudnn.deterministic = True
         return self.model(vocab_size=self.vocab_size, emb_size=self.emb_size)
 
-    """
-    train() should:
-    1. Take in the model weights as bytes and load them into your model
-    2. If parameters passed are None, initialize them to match your untrained model's parameters (i.e. clean slate)
-    3. If needed pre-process the dataset which is passed as a list of rows parsed as dicts
-    4. Output the model parameters retrained on the dataset AS BYTES
-    """
-
     def train(self, parameters: bytes | None) -> bytes:
-
+        """
+        Trains the model using the provided parameters and returns the trained model's state dictionary.
+        Args:
+            parameters (bytes | None): Serialized model parameters to initialize the model. If None, training starts from scratch.
+        Returns:
+            bytes: Serialized state dictionary of the trained model.
+        """
         model = self.get_starting_model()
         if parameters is not None:
             model.load_state_dict(torch.load(io.BytesIO(parameters)))
@@ -137,15 +174,21 @@ class FlockModel:
         torch.save(model.state_dict(), buffer)
         return buffer.getvalue()
 
-    """
-    evaluate() should:
-    1. Take in the model weights as bytes and load them into your model
-    3. If parameters passed are None, initialize them to match your untrained model's parameters (i.e. clean slate)
-    4. If needed pre-process the dataset which is passed as a list of rows parsed as dicts
-    5. Output the accuracy of the model parameters on the dataset as a float
-    """
-
     def evaluate(self, parameters: bytes | None) -> float:
+        """
+        Evaluate the model using the provided parameters and test data.
+        Args:
+            parameters (bytes | None): Serialized model parameters in bytes format. 
+                        If None, the model will use the starting parameters.
+        Returns:
+            float: The accuracy of the model on the test dataset.
+        This method performs the following steps:
+        1. Loads the model with the given parameters or initializes it with starting parameters.
+        2. Moves the model to the specified device and sets it to evaluation mode.
+        3. Iterates over the test data, computes the loss and accuracy.
+        4. Logs the accuracy and loss.
+        5. Returns the accuracy of the model on the test dataset.
+        """
         criterion = self.loss_function
 
         model = self.get_starting_model()
@@ -176,12 +219,15 @@ class FlockModel:
 
         return accuracy
 
-    """
-    aggregate() should take in a list of model weights (bytes),
-    aggregate them using avg and output the aggregated parameters as bytes.
-    """
 
     def aggregate(self, parameters_list: list[bytes]) -> bytes:
+        """
+        Aggregates a list of serialized model parameters by averaging them.
+        Args:
+            parameters_list (list[bytes]): A list of serialized model parameters in bytes format.
+        Returns:
+            bytes: The aggregated model parameters in bytes format.
+        """
         parameters_list = [
             torch.load(io.BytesIO(parameters)) for parameters in parameters_list
         ]
@@ -218,17 +264,3 @@ if __name__ == "__main__":
         "1",
         "2",
     ]
-
-
-    # flock_model = FlockModel(
-    #     classes=classes,
-    #     batch_size=batch_size,
-    #     epochs=epochs,
-    #     lr=lr,
-    #     emb_size=emb_size,
-    #     loss_function=torch.nn.BCELoss(),
-    #     model=torchvision.models.resnet18,
-    # )
-
-    # sdk = FlockSDK(flock_model)
-    # sdk.run()

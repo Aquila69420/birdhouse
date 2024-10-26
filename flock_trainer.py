@@ -56,7 +56,7 @@ class FlockTrainer:
 
         return jsonify({"model_id": model_id}), 201
 
-    @api.route('/send_llm_flock_model/<model_id>', methods=['POST'])
+    @api.route('/send_llm_flock_model', methods=['POST'])
     def send_llm_flock_model(self, model_id):
         """
         Output route to send the instantiated LLMFlockModel object to a node.
@@ -76,7 +76,7 @@ class FlockTrainer:
 
         return jsonify({"message": f"LLMFlockModel with ID {model_id} sent to {node_url}"}), 200
 
-    @api.route('/send_flock_model/<model_id>', methods=['POST'])
+    @api.route('/send_flock_model', methods=['POST'])
     def send_flock_model(self, model_id):
         """
         Output route to send the instantiated FlockModel object to a node.

@@ -20,11 +20,12 @@ def instantiate_flock_model():
     Expects JSON with 'model', 'loss_function', and other params as needed.
     """
     data = request.json
+    print(request)
     model_name = data.get('model_name')
     loss_function_name = data.get('loss_function')
     # Other parameters can be retrieved similarly
     # Instantiate the model using user inputs
-    model = FlockModel(model=model_name, loss_function=loss_function_name)
+    model = FlockModel(model=model_name, loss_function=loss_function_name, classes = ["1", "2",])
     
     model_id = f"flock_model_{len(models)}"
     models[model_id] = model
@@ -41,9 +42,8 @@ def instantiate_llm_flock_model():
     data = request.json
     model_name = data.get('model_name')
     # current directory is used as default output directory
-    output_dir = data.get('.')
 
-    llm_model = LLMFlockModel(model_name=model_name, output_dir=output_dir)
+    llm_model = LLMFlockModel(model_name=model_name, output_dir='.')
     
     model_id = f"llm_flock_model_{len(models)}"
     models[model_id] = llm_model

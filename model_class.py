@@ -23,7 +23,7 @@ class ModelClass(ABC):
 
 # Neural Network Example: CNN Classifier
 class CNNClassifier(ModelClass, nn.Module):
-    def __init__(self, vocab_size, emb_size, num_filters=32, kernel_size=3):
+    def __init__(self, vocab_size=30000, emb_size=100, num_filters=32, kernel_size=3):
         super(CNNClassifier, self).__init__(vocab_size=vocab_size, emb_size=emb_size)
         self.embedding = nn.Embedding(vocab_size, emb_size)
         self.conv = nn.Conv1d(emb_size, num_filters, kernel_size)

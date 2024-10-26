@@ -42,7 +42,7 @@ class FlockModel:
             self.loss_function = torch.nn.CrossEntropyLoss()
         elif loss_function == "NLL":
             self.loss_function = torch.nn.NLLLoss()
-            
+
         self.batch_size = batch_size
         self.epochs = epochs
         self.classes = classes
@@ -217,15 +217,15 @@ if __name__ == "__main__":
     ]
 
 
-    flock_model = FlockModel(
-        classes=classes,
-        batch_size=batch_size,
-        epochs=epochs,
-        lr=lr,
-        emb_size=emb_size,
-        loss_function=torch.nn.BCELoss(),
-        model=torchvision.models.resnet18,
-    )
+    # flock_model = FlockModel(
+    #     classes=classes,
+    #     batch_size=batch_size,
+    #     epochs=epochs,
+    #     lr=lr,
+    #     emb_size=emb_size,
+    #     loss_function=torch.nn.BCELoss(),
+    #     model=torchvision.models.resnet18,
+    # )
 
-    sdk = FlockSDK(flock_model)
-    sdk.run()
+    # sdk = FlockSDK(flock_model)
+    # sdk.run()

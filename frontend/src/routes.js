@@ -23,6 +23,7 @@ import NFTMarketplace from 'views/admin/marketplace';
 import Profile from 'views/admin/profile';
 import DataTables from 'views/tasks';
 import Validate from 'views/validate';
+import Training from 'views/TrainingPage';
 import RTL from 'views/admin/rtl';
 
 // Auth Imports
@@ -63,7 +64,7 @@ const routes = [
     layout: '/admin',
     icon: <Icon as={MdPolyline} width="20px" height="20px" color="inherit" />,
     path: '/data-tables1',
-    component: <DataTables />,
+    component: <Validate />,
   },
   {
     name: 'Validate',

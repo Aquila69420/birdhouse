@@ -1,0 +1,64 @@
+/* Navbar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #333;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .navbarBrand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  
+  .navbarLinks {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .navbarLinkItem {
+    display: inline;
+  }
+
+  .navbarLogo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-decoration: none;
+    
+  }
+  
+  
+  .navbarLink {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s;
+  }
+  
+  .navbarLink:hover {
+    color: #00aaff;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .navbar {
+      flex-direction: column;
+    }
+  
+    .navbarLinks {
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: center;
+      list-style-type: none;
+      padding: 0;
+    }
+  }
+  

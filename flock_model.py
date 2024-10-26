@@ -88,7 +88,7 @@ class FlockModel:
         model.to(self.device)
 
         for epoch in range(self.epochs):
-            logger.debug(f"Epoch {epoch}")
+            logging.debug(f"Epoch {epoch}")
             train_loss = 0.0
             train_correct = 0
             train_total = 0
@@ -108,11 +108,11 @@ class FlockModel:
                 train_total += targets.size(0)
                 train_correct += (predicted == targets.squeeze()).sum().item()
                 if batch_idx < 2:
-                    logger.debug(
+                    logging.debug(
                         f"Batch {batch_idx}, Acc: {round(100.0 * train_correct / train_total, 2)}, Loss: {round(train_loss / train_total, 4)}"
                     )
 
-            logger.info(
+            logging.info(
                 f"Training Epoch: {epoch}, Acc: {round(100.0 * train_correct / train_total, 2)}, Loss: {round(train_loss / train_total, 4)}"
             )
 
@@ -153,7 +153,7 @@ class FlockModel:
                 test_correct += (predicted == targets.squeeze()).sum().item()
 
         accuracy = test_correct / test_total
-        logger.info(
+        logging.info(
             f"Model test, Acc: {accuracy}, Loss: {round(test_loss / test_total, 4)}"
         )
 

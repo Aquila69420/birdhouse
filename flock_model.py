@@ -8,7 +8,7 @@ import numpy as np
 import random
 import json
 import torchvision
-from model_class import CNNClassifier, LogisticRegressionModel, DecisionTreeModel
+from model_class import *
 
 
 class FlockModel:

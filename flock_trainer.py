@@ -118,7 +118,6 @@ def receive_model_weights():
     weights = pickle.loads(serialized_weights)
     # Maybe add the weights to a list and aggregate them later?
     weights_dict[node_address] = weights
-    # TODO: Aggregate weights from all nodes
     logger.info(f"Model weights received from node {node_address}")
     return jsonify({"message": f"Model weights received successfully from node {node_address}"}), 200
 
@@ -135,6 +134,31 @@ def aggregate_weights():
     aggregated_accuracy = model.evaluate(aggregated_weights)
     logger.info("Weights aggregated")
     return jsonify({"message": "Weights aggregated successfully", "aggregated_accuracy": aggregated_accuracy}), 200
+
+@app.route('/fine_tune', methods=['POST'])
+def fine_tune():
+    """
+    Input route to fine-tune the model on a custom dataset.
+    """
+    global model
+
+    if isinstance(model, LLMFlockModel):
+        flock_model = model
+    else:
+        return jsonify({"error": "LLMFlockModel not instantiated"}), 400
+    
+    serialized_llm_flock_model = pickle.dumps(flock_model,protocol=2)
+
+    for node_address in nodes:
+        try:
+            requests.post(f"{node_address}/fine_tune_llm_flock_model", json={"model": serialized_llm_flock_model})
+            logger.info(f"LLMFlockModel sent to node {(node_address)}")
+            # return jsonify({"message": f"FlockModel with ID {model_id} sent to connected {len(nodes)} nodes", "model": serialized_flock_model}), 200
+        except requests.exceptions.RequestException as e:
+            nodes.remove(node_address)
+            logger.error(f"Node {node_address} disconnected")
+            return jsonify({"error": f"Node {node_address} disconnected"}), 500
+    return jsonify({"message": f"LLMFlockModel sent to connected {len(nodes)}"}), 200
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)

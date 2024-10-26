@@ -1,7 +1,8 @@
 import os
 import logging
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from torch.utils.data import DataLoader, Dataset
+from transformers import AutoModelForCausalLM, AutoTokenizer, AdamW, get_linear_schedule_with_warmup
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -30,9 +31,54 @@ class LLMFlockModel:
 
         logger.info(f"Loaded model: {self.model_name}")
 
-    # Fine tune
-    def fine_tune(self):
-        pass
+    def fine_tune(self, texts, epochs=3, batch_size=8, learning_rate=5e-5):
+        """
+        Fine-tunes the model on a custom dataset.
+        
+        Args:
+            texts (list): List of training texts for fine-tuning.
+            epochs (int): Number of training epochs.
+            batch_size (int): Batch size for training.
+            learning_rate (float): Learning rate for the optimizer.
+        """
+        # Prepare the dataset and dataloader
+        dataset = TextDataset(texts, self.tokenizer)
+        data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+
+        # Define the optimizer and scheduler
+        optimizer = AdamW(self.model.parameters(), lr=learning_rate)
+        total_steps = len(data_loader) * epochs
+        scheduler = get_linear_schedule_with_warmup(
+            optimizer, num_warmup_steps=0, num_training_steps=total_steps
+        )
+
+        self.model.train()  # Set model to training mode
+
+        for epoch in range(epochs):
+            epoch_loss = 0
+            for batch_idx, (input_ids, attention_mask) in enumerate(data_loader):
+                input_ids, attention_mask = input_ids.to(self.device), attention_mask.to(self.device)
+
+                # Forward pass
+                outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, labels=input_ids)
+                loss = outputs.loss
+
+                # Backward pass
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+                scheduler.step()
+
+                epoch_loss += loss.item()
+
+                # Log batch-level details if verbose
+                if self.verbose and batch_idx % 10 == 0:
+                    logger.debug(f"Epoch: {epoch+1}, Batch: {batch_idx}, Loss: {loss.item()}")
+
+            avg_loss = epoch_loss / len(data_loader)
+            logger.info(f"Epoch {epoch+1}/{epochs}, Average Loss: {avg_loss}")
+
+        logger.info("Fine-tuning complete!")
 
     def generate_text(self, prompt: str, max_length: int = 50) -> str:
         """
@@ -108,3 +154,32 @@ class LLMFlockModel:
 
 #     # Save the model if needed
 #     llm_model.save_model(output_dir)
+
+class TextDataset(Dataset):
+    def __init__(self, texts, tokenizer, max_length=512):
+        self.texts = texts
+        self.tokenizer = tokenizer
+        self.max_length = max_length
+
+    def __len__(self):
+        return len(self.texts)
+
+    def __getitem__(self, idx):
+        encodings = self.tokenizer(
+            self.texts[idx],
+            truncation=True,
+            padding="max_length",
+            max_length=self.max_length,
+            return_tensors="pt",
+        )
+        return encodings["input_ids"].squeeze(), encodings["attention_mask"].squeeze()
+
+class SentimentTextDataset(TextDataset):
+    def __init__(self, texts, labels, tokenizer, max_length=512):
+        super().__init__(texts, tokenizer, max_length)
+        self.labels = labels  # Add labels to the dataset
+
+    def __getitem__(self, idx):
+        input_ids, attention_mask = super().__getitem__(idx)
+        label = self.labels[idx]
+        return input_ids, attention_mask, torch.tensor(label, dtype=torch.long)  # Include label in each item

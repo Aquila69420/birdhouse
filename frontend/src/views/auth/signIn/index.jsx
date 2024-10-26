@@ -49,9 +49,20 @@ function SignIn() {
           <FormLabel color={textColor}>Wallet Address</FormLabel>
           <Input type="text" placeholder="Wallet Address" />
         </FormControl>
-        <Button colorScheme="teal" w="100%" mb="12px">
+        <Button
+          fontSize="sm"
+          fontWeight="500"
+          w="100%"
+          h="50px"
+          mb="12px"
+          backgroundColor="#4318ff"
+          color="white"
+          _hover={{ backgroundColor: "#3a16e0" }}  // Darker shade for hover effect
+          _active={{ backgroundColor: "#3214c2" }}  // Even darker for active state
+        >
           Sign In
         </Button>
+
       </Box>
     </Flex>
   );

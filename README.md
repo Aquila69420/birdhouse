@@ -62,7 +62,7 @@ This repository hosts the code for Birdhouse, a decentralized Federated Learning
 - **Decentralized Incentivization**: Proof-of-stake and reward systems with token staking.
 - **User Roles**: Support for task creators/delegators and training/validation nodes.
 - **Comprehensive UI**: Frontend for model setup, training node management, and performance tracking.
-- **Attack Mitigation**: Security features against Sybil, DoS, Free-rider, Lookup, and FL model poisoning attacks.
+- **Attack Mitigation**: Security features against Sybil, DoS, Free-rider, and Lookup attacks.
 <!-- - **Temporary cURL Command Support**: While the model creation UI is under development, we support cURL-based model setup.
 - **Future Proof**: Plans for AI Marketplace and FL alliance with upcoming model creation UI and validation nodes UI. 
 -->

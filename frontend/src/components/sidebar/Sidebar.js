@@ -76,15 +76,6 @@ export function SidebarResponsive(props) {
   return (
     <Flex display={{ sm: "flex", xl: "none" }} alignItems='center'>
       <Flex ref={btnRef} w='max-content' h='max-content' onClick={onOpen}>
-        <Icon
-          as={IoMenuOutline}
-          color={menuColor}
-          my='auto'
-          w='20px'
-          h='20px'
-          me='10px'
-          _hover={{ cursor: "pointer" }}
-        />
       </Flex>
       <Drawer
         isOpen={isOpen}

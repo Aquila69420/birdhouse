@@ -38,8 +38,7 @@ def login():
         success_v2 = token_manager.login(wallet_id)
         if success_v2:
             return jsonify({"message": f"User {wallet_id} registered and logged in successfully"}), 201
-        else:
-            return jsonify({"message": f"User {wallet_id} not found"}), 404
+        return jsonify({"message": f"User {wallet_id} not found"}), 404
     return jsonify({"message": f"User {wallet_id} logged in successfully"}), 200
 
 # @app.route('/register_client', methods=['POST'])
@@ -61,7 +60,8 @@ def pay_tokens():
     """
     data = request.json
     wallet_id = data.get('wallet_id')
-    tokens = data.get('tokens')
+    tokens = eval(data.get('tokens'))
+    print(f"Wallet ID: {wallet_id}, Tokens: {tokens}")
     if not token_manager.update_client_tokens(wallet_id, tokens):
         return jsonify({"message": "Insufficient tokens"}), 400
     return jsonify({"message": f"{tokens} tokens paid successfully"}), 200

@@ -36,7 +36,7 @@ function SignIn() {
     axios.post("http://10.154.36.81:5000/login_client", {
       wallet_address: address,
     }).then((res) => {
-      if (res.status != 400) {
+      if (res.status !== 404) {
         dispatch(setIsLoggedIn(true));
       }
     });

@@ -28,7 +28,9 @@ import {
 import { MdCancel, MdCheckCircle, MdOutlineError, MdExpandMore, MdExpandLess } from 'react-icons/md';
 import Card from 'components/card/Card';
 import Menu from 'components/menu/MainMenu';
+import axios from 'axios';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 
 const columnHelper = createColumnHelper();
 
@@ -38,6 +40,7 @@ export default function ComplexTable(props) {
   const [expandedRows, setExpandedRows] = React.useState({});
   const [selectedTask, setSelectedTask] = React.useState(null);
   const [tokens, setTokens] = React.useState("");
+  const wallet_id = useSelector((state) => state.person.wallet_id);
   
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
@@ -210,6 +213,29 @@ export default function ComplexTable(props) {
     getSortedRowModel: getSortedRowModel(),
   });
 
+  async function handleStake() {
+    // Create an axios instance (optional)
+    const axiosInstance = axios.create({
+      baseURL: 'http://10.154.36.81:5000',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add authorization or other headers here if needed
+      },
+    });
+    console.log("Stake Action:", { task: selectedTask, tokens });
+    try {
+      const response = await axiosInstance.post('/pay_tokens', {
+        wallet_id,
+        tokens,
+      });
+      setTokens(response.data);
+      console.log("Token Update Successful:", response.data);
+    } catch (error) {
+      console.error("Error in token stake:", error.response?.data || error.message);
+      alert("Failed to stake tokens. Please try again.");
+    }
+  };
+
   return (
     <Card flexDirection="column" w="100%" px="0px" overflowX="auto">
       <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
@@ -263,7 +289,7 @@ export default function ComplexTable(props) {
                             width="300px"
                             mb="4"
                           />
-                          <Button colorScheme="brandScheme" bg="brand.500" color="white">
+                          <Button colorScheme="brandScheme" bg="brand.500" color="white" onClick={handleStake}>
                             Stake FML
                           </Button>
                         </Flex>

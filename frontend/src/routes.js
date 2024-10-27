@@ -66,14 +66,14 @@ const routes = [
     name: 'Training Node',
     layout: '/admin',
     icon: <Icon as={MdPolyline} width="20px" height="20px" color="inherit" />,
-    path: '/data-tables1',
+    path: '/training',
     component: <Training />,
   },
   {
     name: 'Validate',
     layout: '/admin',
     icon: <Icon as={MdListAlt} width="20px" height="20px" color="inherit" />,
-    path: '/data-tables2',
+    path: '/validate',
     component: <Validate />,
   },
   {

@@ -1,7 +1,9 @@
 /* eslint-disable */
 
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setName, setAddress, setIsLoggedIn} from "../../../redux/reducers/nameReducer";
 import {
   Box,
   Button,
@@ -15,6 +17,26 @@ import {
 } from "@chakra-ui/react";
 
 function SignIn() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
+  // Local state to manage form inputs
+  const [name, setNameInput] = useState('');
+  const [address, setAddressInput] = useState('');
+
+  // Fetching stored values to check or display if needed
+  const storedName = useSelector((state) => state.person.name);
+  const storedAddress = useSelector((state) => state.person.address);
+
+  const handleSignIn = () => {
+    // Dispatching to update Redux state
+    dispatch(setName(name));
+    dispatch(setAddress(address));
+    dispatch(setIsLoggedIn(true))
+    // Navigate to the admin page after signing in
+    navigate("/admin/task-creation");
+  };
+
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const textColorBrand = useColorModeValue("brand.500", "white");
@@ -41,15 +63,27 @@ function SignIn() {
         <Text mb="36px" color={textColorSecondary} textAlign="center">
           Enter your name and wallet address to sign in!
         </Text>
+        
         <FormControl mb="24px" isRequired>
           <FormLabel color={textColor}>Name</FormLabel>
-          <Input type="text" placeholder="Your Name" />
+          <Input
+            type="text"
+            placeholder="Your Name"
+            value={name}
+            onChange={(e) => setNameInput(e.target.value)}
+          />
         </FormControl>
+        
         <FormControl mb="24px" isRequired>
           <FormLabel color={textColor}>Wallet Address</FormLabel>
-          <Input type="text" placeholder="Wallet Address" />
+          <Input
+            type="text"
+            placeholder="Wallet Address"
+            value={address}
+            onChange={(e) => setAddressInput(e.target.value)}
+          />
         </FormControl>
-        <Link to={"/admin"}>
+        <Link to="/admin">
         <Button
           fontSize="sm"
           fontWeight="500"
@@ -60,11 +94,11 @@ function SignIn() {
           color="white"
           _hover={{ backgroundColor: "#3a16e0" }}  // Darker shade for hover effect
           _active={{ backgroundColor: "#3214c2" }}  // Even darker for active state
+          onClick={handleSignIn}
         >
           Sign In
         </Button>
         </Link>
-
       </Box>
     </Flex>
   );

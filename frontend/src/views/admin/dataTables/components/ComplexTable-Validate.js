@@ -1,5 +1,5 @@
 /* eslint-disable */
-
+import { useState } from 'react'; // Import useState here
 import {
   Box,
   Flex,
@@ -14,9 +14,18 @@ import {
   Tr,
   useColorModeValue,
   Collapse,
-  Checkbox,
   Input,
   Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  FormControl,
+  FormLabel,
 } from '@chakra-ui/react';
 import {
   createColumnHelper,
@@ -38,54 +47,37 @@ export default function ComplexTable(props) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState([]);
   const [expandedRows, setExpandedRows] = React.useState({});
+  const [tokensPerTask, setTokensPerTask] = React.useState({});
   const [selectedTask, setSelectedTask] = React.useState(null);
-  const [tokens, setTokens] = React.useState("");
+  const [flockApiKey, setFlockApiKey] = React.useState("");
+  const [hfToken, setHfToken] = React.useState("");
+  const [hfUsername, setHfUsername] = React.useState("");
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const wallet_id = useSelector((state) => state.person.wallet_id);
-  
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 
-  // Toggle row expansion for expand icon only
+  const [isLoading, setIsLoading] = useState(false); // Define the isLoading state
+  const [output, setOutput] = useState(null);
+
+
   const toggleRowExpansion = (row) => {
-    const rowId = row.id;
-    setExpandedRows((prevState) => {
-      const isExpanding = !prevState[rowId];
-      
-      // Clear the selected task if the row is collapsing
-      if (!isExpanding) {
-        setSelectedTask(null);
-      } else {
-        setSelectedTask(row.original); // Set the selected task if expanding
-      }
-
-      return {
-        ...prevState,
-        [rowId]: isExpanding,
-      };
-    });
-  };
-
-  // Handle task selection
-  const handleCheckboxToggle = (row) => {
-    const rowId = row.id;
     setExpandedRows((prevState) => ({
       ...prevState,
-      [rowId]: !prevState[rowId],
+      [row.id]: !prevState[row.id],
     }));
-    setSelectedTask(row.original); // Set the selected task for staking input
+    setSelectedTask(row.original);
   };
 
-  // Columns configuration
+  const handleTokensChange = (taskId, value) => {
+    setTokensPerTask((prevTokens) => ({
+      ...prevTokens,
+      [taskId]: value,
+    }));
+  };
+
   const columns = [
-    columnHelper.display({
-      id: 'select',
-      cell: (info) => (
-        <Checkbox
-          isChecked={selectedTask === info.row.original}
-          onChange={() => handleCheckboxToggle(info.row)}
-        />
-      ),
-    }),
     columnHelper.accessor('task-id', {
       id: 'task-id',
       header: () => (
@@ -186,22 +178,6 @@ export default function ComplexTable(props) {
         </Flex>
       ),
     }),
-    columnHelper.accessor('expand', {
-      id: 'expand',
-      header: () => null,
-      cell: (info) => (
-        <Icon
-          as={expandedRows[info.row.id] ? MdExpandLess : MdExpandMore}
-          w="20px"
-          h="20px"
-          cursor="pointer"
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleRowExpansion(info.row);
-          }}
-        />
-      ),
-    }),
   ];
 
   const table = useReactTable({
@@ -213,35 +189,10 @@ export default function ComplexTable(props) {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  async function handleStake() {
-    // Create an axios instance (optional)
-    const axiosInstance = axios.create({
-      baseURL: 'http://10.154.36.81:5000',
-      headers: {
-        'Content-Type': 'application/json',
-        // Add authorization or other headers here if needed
-      },
-    });
-    console.log("Stake Action:", { task: selectedTask, tokens });
-    try {
-      const response = await axiosInstance.post('/pay_tokens', {
-        wallet_id,
-        tokens,
-      });
-      setTokens(response.data);
-      console.log("Token Update Successful:", response.data);
-    } catch (error) {
-      console.error("Error in token stake:", error.response?.data || error.message);
-      alert("Failed to stake tokens. Please try again.");
-    }
-  };
-
   return (
     <Card flexDirection="column" w="100%" px="0px" overflowX="auto">
       <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
-        <Text color={textColor} fontSize="22px" fontWeight="700">
-          Current Tasks
-        </Text>
+        <Text color={textColor} fontSize="22px" fontWeight="700">Current Tasks</Text>
         <Menu />
       </Flex>
       <Box>
@@ -251,9 +202,7 @@ export default function ComplexTable(props) {
               <Tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <Th key={header.id} borderColor={borderColor}>
-                    <Flex justifyContent="space-between" align="center">
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                    </Flex>
+                    {flexRender(header.column.columnDef.header, header.getContext())}
                   </Th>
                 ))}
               </Tr>
@@ -262,19 +211,28 @@ export default function ComplexTable(props) {
           <Tbody>
             {table.getRowModel().rows.map((row) => (
               <React.Fragment key={row.id}>
-                <Tr
-                  cursor="pointer"
-                  onClick={() => toggleRowExpansion(row)}
-                  _hover={{ bg: 'gray.100' }}
-                >
+                <Tr cursor="pointer" onClick={() => toggleRowExpansion(row)} _hover={{ bg: 'gray.100' }}>
                   {row.getVisibleCells().map((cell) => (
                     <Td key={cell.id} borderColor="transparent">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </Td>
                   ))}
+                  <Td>
+                    <Button
+                      colorScheme="brandScheme"
+                      bg="brand.500"
+                      color="white"
+                      onClick={() => {
+                        setSelectedTask(row.original);
+                        onOpen();
+                      }}
+                    >
+                      Validate
+                    </Button>
+                  </Td>
                 </Tr>
                 <Tr>
-                  <Td colSpan={columns.length} p="0">
+                  <Td colSpan={columns.length + 1} p="0">
                     <Collapse in={expandedRows[row.id]} animateOpacity>
                       <Box p="20px" bg="gray.50" borderBottomRadius="md">
                         <Text fontSize="sm" color="gray.600" mb="4">
@@ -284,14 +242,13 @@ export default function ComplexTable(props) {
                           <Input
                             placeholder="Enter tokens amount"
                             type="number"
-                            value={tokens}
-                            onChange={(e) => setTokens(e.target.value)}
+                            value={tokensPerTask[row.original['task-id']] || ""}
+                            onChange={(e) =>
+                              handleTokensChange(row.original['task-id'], e.target.value)
+                            }
                             width="300px"
                             mb="4"
                           />
-                          <Button colorScheme="brandScheme" bg="brand.500" color="white">
-                            Validate
-                          </Button>
                         </Flex>
                       </Box>
                     </Collapse>
@@ -302,6 +259,69 @@ export default function ComplexTable(props) {
           </Tbody>
         </Table>
       </Box>
+
+      {/* Modal for API and Training Details */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            Enter Training Details for Task {selectedTask ? selectedTask['task-id'] : 'Unknown Task'}
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl mb="4">
+              <FormLabel>FLOCK API KEY</FormLabel>
+              <Input placeholder="Enter FLOCK API KEY" value={flockApiKey} onChange={(e) => setFlockApiKey(e.target.value)} />
+            </FormControl>
+            <FormControl mb="4">
+              <FormLabel>Hugging Face Token</FormLabel>
+              <Input placeholder="Enter Hugging Face Token" value={hfToken} onChange={(e) => setHfToken(e.target.value)} />
+            </FormControl>
+            {/* <FormControl mb="4">
+              <FormLabel>Hugging Face Username</FormLabel>
+              <Input placeholder="Enter Hugging Face Username" value={hfUsername} onChange={(e) => setHfUsername(e.target.value)} />
+            </FormControl> */}
+          </ModalBody>
+          <ModalFooter>
+          <Button
+            colorScheme="blue"
+            mr={3}
+            isLoading={isLoading} // Shows spinner while loading
+            onClick={async () => {
+              let output;
+              setIsLoading(true); // Start the loading spinner
+              try {
+                const response = await axios.post("http://10.154.36.81:5000/validate", {
+                  flockApiKey,
+                  hfToken,
+                  taskId: selectedTask['task-id'],
+                });
+                
+                output = response.data.output; // Capturing output
+                const error = response.data.error; // Capturing error
+
+                console.log("Output:", output);
+                console.log("Error:", error);
+
+                alert("Failed to initiate training. Please try again. Output: " + output + " " + error);
+                
+              } catch (error) {
+                console.error("Error in execution:", error.response?.data || error.message);
+                // Show the output in an alert
+                alert("Failed to initiate training. Please try again. Output: " + output + " " + error);
+              } finally {
+                setIsLoading(false); // Stop the loading spinner
+                onClose(); // Close modal after the response is handled
+              }
+            }}
+          >
+            Submit
+          </Button>
+
+            <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Card>
   );
 }

@@ -67,7 +67,7 @@ const routes = [
     layout: '/admin',
     icon: <Icon as={MdPolyline} width="20px" height="20px" color="inherit" />,
     path: '/data-tables1',
-    component: <Validate />,
+    component: <Training />,
   },
   {
     name: 'Validate',

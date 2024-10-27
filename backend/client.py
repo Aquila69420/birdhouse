@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from base64 import b64decode
 
 # Load the MongoDB URI from the file
-with open ("mongo_uri.txt", "r") as myfile:
+with open ("backend/mongo_uri.txt", "r") as myfile:
     mongo_uri=b64decode(myfile.readline().strip()).decode("utf-8")
 db_name = "token_db"
 collection_name = "tokens"

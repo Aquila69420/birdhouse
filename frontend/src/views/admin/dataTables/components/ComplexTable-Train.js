@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { useState } from 'react'; // Import useState here
 import {
   Box,
   Flex,
@@ -56,6 +57,10 @@ export default function ComplexTable(props) {
   const wallet_id = useSelector((state) => state.person.wallet_id);
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
+
+  const [isLoading, setIsLoading] = useState(false); // Define the isLoading state
+  const [output, setOutput] = useState(null);
+
 
   const toggleRowExpansion = (row) => {
     setExpandedRows((prevState) => ({
@@ -281,8 +286,10 @@ export default function ComplexTable(props) {
           <Button
             colorScheme="blue"
             mr={3}
+            isLoading={isLoading} // Shows spinner while loading
             onClick={async () => {
               let output;
+              setIsLoading(true); // Start the loading spinner
               try {
                 const response = await axios.post("http://10.154.36.81:5000/execute", {
                   flockApiKey,
@@ -290,26 +297,28 @@ export default function ComplexTable(props) {
                   hfUsername,
                   taskId: selectedTask['task-id'],
                 });
-        
-                const output = response.data.output; // Capturing output
+                
+                output = response.data.output; // Capturing output
                 const error = response.data.error; // Capturing error
-        
+
                 console.log("Output:", output);
                 console.log("Error:", error);
 
                 alert("Failed to initiate training. Please try again. Output: " + error);
-        
-                onClose(); // Close modal after successful request  
+                
               } catch (error) {
                 console.error("Error in execution:", error.response?.data || error.message);
                 // Show the output in an alert
                 alert("Failed to initiate training. Please try again. Output: " + output);
-                onClose();
+              } finally {
+                setIsLoading(false); // Stop the loading spinner
+                onClose(); // Close modal after the response is handled
               }
             }}
           >
             Submit
           </Button>
+
             <Button variant="ghost" onClick={onClose}>Cancel</Button>
           </ModalFooter>
         </ModalContent>

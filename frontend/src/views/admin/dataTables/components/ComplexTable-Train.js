@@ -13,7 +13,6 @@ import {
   Tr,
   useColorModeValue,
   Collapse,
-  Checkbox,
   Input,
   Button,
   Modal,
@@ -63,6 +62,7 @@ export default function ComplexTable(props) {
       ...prevState,
       [row.id]: !prevState[row.id],
     }));
+    setSelectedTask(row.original);
   };
 
   const handleTokensChange = (taskId, value) => {
@@ -73,15 +73,6 @@ export default function ComplexTable(props) {
   };
 
   const columns = [
-    columnHelper.display({
-      id: 'select',
-      cell: (info) => (
-        <Checkbox
-          isChecked={selectedTask === info.row.original}
-          onChange={() => setSelectedTask(info.row.original)}
-        />
-      ),
-    }),
     columnHelper.accessor('task-id', {
       id: 'task-id',
       header: () => (
@@ -182,22 +173,6 @@ export default function ComplexTable(props) {
         </Flex>
       ),
     }),
-    columnHelper.accessor('expand', {
-      id: 'expand',
-      header: () => null,
-      cell: (info) => (
-        <Icon
-          as={expandedRows[info.row.id] ? MdExpandLess : MdExpandMore}
-          w="20px"
-          h="20px"
-          cursor="pointer"
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleRowExpansion(info.row);
-          }}
-        />
-      ),
-    }),
   ];
 
   const table = useReactTable({
@@ -209,11 +184,6 @@ export default function ComplexTable(props) {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  const handleTrainButtonClick = (task) => {
-    setSelectedTask(task);
-    onOpen();
-  };
-
   return (
     <Card flexDirection="column" w="100%" px="0px" overflowX="auto">
       <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
@@ -222,11 +192,21 @@ export default function ComplexTable(props) {
       </Flex>
       <Box>
         <Table variant="simple" color="gray.500" mb="24px" mt="12px">
-          <Thead>{/* Table Head */}</Thead>
+          <Thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <Th key={header.id} borderColor={borderColor}>
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  </Th>
+                ))}
+              </Tr>
+            ))}
+          </Thead>
           <Tbody>
             {table.getRowModel().rows.map((row) => (
               <React.Fragment key={row.id}>
-                <Tr cursor="pointer" _hover={{ bg: 'gray.100' }}>
+                <Tr cursor="pointer" onClick={() => toggleRowExpansion(row)} _hover={{ bg: 'gray.100' }}>
                   {row.getVisibleCells().map((cell) => (
                     <Td key={cell.id} borderColor="transparent">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -237,14 +217,17 @@ export default function ComplexTable(props) {
                       colorScheme="brandScheme"
                       bg="brand.500"
                       color="white"
-                      onClick={() => handleTrainButtonClick(row.original)}
+                      onClick={() => {
+                        setSelectedTask(row.original);
+                        onOpen();
+                      }}
                     >
                       Train
                     </Button>
                   </Td>
                 </Tr>
                 <Tr>
-                  <Td colSpan={columns.length} p="0">
+                  <Td colSpan={columns.length + 1} p="0">
                     <Collapse in={expandedRows[row.id]} animateOpacity>
                       <Box p="20px" bg="gray.50" borderBottomRadius="md">
                         <Text fontSize="sm" color="gray.600" mb="4">
@@ -272,7 +255,7 @@ export default function ComplexTable(props) {
         </Table>
       </Box>
 
-      {/* Modal for FLOCK API KEY, Hugging Face Token, and Username */}
+      {/* Modal for API and Training Details */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -299,15 +282,15 @@ export default function ComplexTable(props) {
             colorScheme="blue"
             mr={3}
             onClick={async () => {
+              let output;
               try {
-                let output;
                 const response = await axios.post("http://10.154.36.81:5000/execute", {
                   flockApiKey,
                   hfToken,
                   hfUsername,
                   taskId: selectedTask['task-id'],
                 }).then((res) => {
-                  output = res.output;
+                  output = res.error;
                   console.log("Response:", output);
                 });
                 console.log("Execution Successful:", response.data);
@@ -315,7 +298,9 @@ export default function ComplexTable(props) {
                 onClose(); // Close modal after successful request
               } catch (error) {
                 console.error("Error in execution:", error.response?.data || error.message);
-                alert("Failed to initiate training. Please try again.");
+                // Show the output in an alert
+                alert("Failed to initiate training. Please try again. Output: " + output);
+                onClose();
               }
             }}
           >

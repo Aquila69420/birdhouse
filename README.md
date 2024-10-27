@@ -14,6 +14,8 @@ This repository hosts the code for Birdhouse, a decentralized Federated Learning
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Usage](#usage)
+- [Presentation](#presentation)
+- [Video](#video)
 - [License](#license)
 
 

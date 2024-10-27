@@ -9,10 +9,16 @@ const TokenBalanceCard = ({ walletId, tokenAddress }) => {
 
   useEffect(() => {
     const fetchBalance = async () => {
+      if (!window.ethereum) {
+        console.error("Ethereum provider not found. Install MetaMask.");
+        setError(true);
+        return;
+      }
+
       try {
         setError(false); // Reset error state before fetching
 
-        // Connect to Ethereum provider (e.g., MetaMask)
+        // Use ethers BrowserProvider (v6) or Web3Provider (v5) depending on your version
         const provider = new ethers.BrowserProvider(window.ethereum);
         
         // ABI for balanceOf function in ERC-20 tokens
@@ -22,8 +28,8 @@ const TokenBalanceCard = ({ walletId, tokenAddress }) => {
         const tokenContract = new ethers.Contract(tokenAddress, tokenAbi, provider);
         
         // Fetch balance and format to 18 decimals
-        const balance = await tokenContract.balanceOf(walletId);
-        setBalance(ethers.formatUnits(balance, 18)); // Adjust 18 based on your token's decimals
+        const balanceBigNumber = await tokenContract.balanceOf(walletId);
+        setBalance(ethers.formatUnits(balanceBigNumber, 18)); // Adjust 18 based on your token's decimals
       } catch (error) {
         console.error("Error fetching balance:", error);
         setError(true); // Set error state if fetching fails

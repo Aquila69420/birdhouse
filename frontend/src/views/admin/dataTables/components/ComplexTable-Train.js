@@ -289,13 +289,17 @@ export default function ComplexTable(props) {
                   hfToken,
                   hfUsername,
                   taskId: selectedTask['task-id'],
-                }).then((res) => {
-                  output = res.error;
-                  console.log("Response:", output);
                 });
-                console.log("Execution Successful:", response.data);
-                alert("Training initiated successfully!");
-                onClose(); // Close modal after successful request
+        
+                const output = response.data.output; // Capturing output
+                const error = response.data.error; // Capturing error
+        
+                console.log("Output:", output);
+                console.log("Error:", error);
+
+                alert("Failed to initiate training. Please try again. Output: " + error);
+        
+                onClose(); // Close modal after successful request  
               } catch (error) {
                 console.error("Error in execution:", error.response?.data || error.message);
                 // Show the output in an alert

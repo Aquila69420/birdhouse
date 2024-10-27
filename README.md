@@ -63,10 +63,42 @@ This repository hosts the code for Birdhouse, a decentralized Federated Learning
 - **User Roles**: Support for task creators/delegators and training/validation nodes.
 - **Comprehensive UI**: Frontend for model setup, training node management, and performance tracking.
 - **Attack Mitigation**: Security features against Sybil, DoS, Free-rider, and Lookup attacks.
-<!-- - **Temporary cURL Command Support**: While the model creation UI is under development, we support cURL-based model setup.
-- **Future Proof**: Plans for AI Marketplace and FL alliance with upcoming model creation UI and validation nodes UI. 
--->
+
 ## Flock.io Principles
+
+The Flock.io framework is designed to democratize and decentralize AI model training, making high-quality machine learning accessible and secure for users worldwide. This project leverages key Flock.io principles, integrating them into a decentralized platform that promotes equitable access, incentivization, and robust security for federated learning. Below are the core principles of Flock.io that we implement in this project:
+
+### 1. AI Arena
+The **AI Arena** is the core environment where federated learning tasks are managed and executed. In this system, users can submit model training tasks, which are distributed across multiple nodes in a decentralized manner. The arena allows users to select a model architecture and adjust hyperparameters. The training workload is divided among nodes (Training Nodes), and upon task completion, the aggregated model is evaluated and prepared for deployment. This approach provides:
+
+- **Distributed training** that reduces the computational burden on individual users.
+- **Fault tolerance** and resilience, as training is spread across many nodes.
+- **Enhanced accessibility**, allowing users without extensive resources to participate in machine learning model training.
+
+### 2. Proof-of-Stake + Rewards + Staking Tokens System
+Incentivization is fundamental to Flock.io's model, encouraging active participation through a **Proof-of-Stake (PoS)** mechanism combined with a **rewards** system. The system works as follows:
+
+- **Staking**: Both users (Task Creators) and nodes (Training Nodes) stake tokens to participate in the training and validation processes.
+- **Rewards**: Upon successful model aggregation and validation, rewards are distributed based on contributions. Rewards can be earned by training nodes for providing quality updates, validators for securing the aggregation process, and task creators for engaging with the platform.
+- **Security**: The staking system disincentivizes malicious actions and contributes to platform security. Malicious nodes may lose their staked tokens if they attempt to undermine the aggregation process.
+
+### 3. Aggregation
+**Aggregation** is a crucial step in federated learning where individual models trained on different nodes are combined into a single global model. In our system, aggregation is performed after training nodes send their model updates to the AI Arena. The aggregated model is then evaluated for quality, ensuring it meets the required standards before deployment. This approach provides:
+
+- **Efficient use of distributed data** by aggregating insights from multiple sources.
+- **Enhanced privacy** as raw data never leaves the node but contributes to the global model.
+
+### 4. Roles in the Flock Ecosystem
+
+- **Task Creators**: Users who initiate training tasks, specifying the model architecture and hyperparameters. They stake tokens to create tasks and, upon successful completion, receive rewards. Task creators benefit from a low barrier to entry, able to access machine learning training without large computational investments.
+  
+- **Training Nodes**: These nodes perform the distributed training, receiving portions of the model and data segments. They complete training based on the task creator’s specifications and submit their weights to the AI Arena for aggregation. Training nodes stake tokens to participate and earn rewards based on their contributions and the quality of their updates.
+
+- **Validators**: Validators verify the integrity and quality of the model aggregation process, ensuring that only valid, high-quality models are accepted. They play a critical role in maintaining the reliability and security of the system by detecting anomalies, preventing model poisoning attacks, and validating genuine contributions.
+
+- **Delegators**: Delegators support validators and training nodes by staking tokens, allowing them to participate in tasks. Delegators earn a portion of the rewards based on the performance and honesty of the nodes they support, aligning incentives for collaboration and accountability within the ecosystem.
+
+This structure, inspired by the Flock.io framework, provides a robust system for **fault tolerance**, **decentralization**, and **equity** in AI training. Each role is essential to the network’s functionality, security, and success, as outlined in the whitepaper. Combining these principles enables a decentralized training ecosystem that is both accessible and secure, with built-in protections against Sybil attacks, DoS, model poisoning, and other adversarial threats.
 
 ## Getting Started
 

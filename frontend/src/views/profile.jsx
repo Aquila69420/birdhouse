@@ -1,5 +1,4 @@
 // Profile.jsx
-
 import React from 'react';
 import { Box, Grid } from "@chakra-ui/react";
 import ProfileInfoCard from "views/admin/dataTables/components/ProfileInfoCard";
@@ -8,10 +7,12 @@ import TokenBalanceCard from "views/admin/dataTables/components/TokenBalanceCard
 // Placeholder for user data
 const userData = {
   name: "Adela Parkson",
-  walletId: "0x1234...abcd",
-  tokens: 1250,
-  avatarSrc: "assets/img/avatars/avatar4.png"  // Use a path to the avatar image
+  walletId: "0x59655fdcdf5fa4a9ae25f060c8306ee6f368bc2c",
+  avatarSrc: "assets/img/avatars/avatar4.png",  // Use a path to the avatar image
 };
+
+// Define the token contract address for $FML
+const tokenAddress = "0xc8d94c5cB4462966473b3b1505B8129f12152977"; // Replace with actual token contract address
 
 export default function Profile() {
   return (
@@ -31,7 +32,7 @@ export default function Profile() {
         />
 
         {/* Token Balance Card */}
-        <TokenBalanceCard tokens={userData.tokens} />
+        <TokenBalanceCard walletId={userData.walletId} tokenAddress={tokenAddress} />
       </Grid>
     </Box>
   );

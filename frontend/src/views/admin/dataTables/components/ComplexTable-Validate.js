@@ -264,7 +264,7 @@ export default function ComplexTable(props) {
                             mb="4"
                           />
                           <Button colorScheme="brandScheme" bg="brand.500" color="white">
-                            Stake FML
+                            Validate
                           </Button>
                         </Flex>
                       </Box>

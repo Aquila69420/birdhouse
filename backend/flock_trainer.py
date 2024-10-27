@@ -30,22 +30,27 @@ def login():
     Route to login a user based on wallet ID.
     """
     data = request.json
-    wallet_id = data.get('wallet_id')
+    wallet_id = data.get('wallet_address')
     success = token_manager.login(wallet_id)
     if not success:
+        initial_tokens = data.get('initial_tokens', 10)
+        token_manager.register_client(wallet_id, initial_tokens)
+        success_v2 = token_manager.login(wallet_id)
+        if success_v2:
+            return jsonify({"message": f"User {wallet_id} registered and logged in successfully"}), 201
         return jsonify({"message": f"User {wallet_id} not found"}), 404
     return jsonify({"message": f"User {wallet_id} logged in successfully"}), 200
 
-@app.route('/register_client', methods=['POST'])
-def register():
-    """
-    Route to register a new client with an initial amount of tokens.
-    """
-    data = request.json
-    wallet_id = data.get('wallet_id')
-    initial_tokens = data.get('initial_tokens', 10)
-    token_manager.register_client(wallet_id, initial_tokens)
-    return jsonify({"message": f"User {wallet_id} registered successfully"}), 201
+# @app.route('/register_client', methods=['POST'])
+# def register():
+#     """
+#     Route to register a new client with an initial amount of tokens.
+#     """
+#     data = request.json
+#     wallet_id = data.get('wallet_address')
+#     initial_tokens = data.get('initial_tokens', 10)
+#     token_manager.register_client(wallet_id, initial_tokens)
+#     return jsonify({"message": f"User {wallet_id} registered successfully"}), 201
 
 @app.route('/pay_tokens', methods=['POST'])
 def pay_tokens():
@@ -55,7 +60,8 @@ def pay_tokens():
     """
     data = request.json
     wallet_id = data.get('wallet_id')
-    tokens = data.get('tokens')
+    tokens = eval(data.get('tokens'))
+    print(f"Wallet ID: {wallet_id}, Tokens: {tokens}")
     if not token_manager.update_client_tokens(wallet_id, tokens):
         return jsonify({"message": "Insufficient tokens"}), 400
     return jsonify({"message": f"{tokens} tokens paid successfully"}), 200

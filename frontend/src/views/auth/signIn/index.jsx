@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import React, { useState } from "react";
+import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setName, setAddress, setIsLoggedIn} from "../../../redux/reducers/nameReducer";
@@ -33,6 +34,18 @@ function SignIn() {
     dispatch(setName(name));
     dispatch(setAddress(address));
     dispatch(setIsLoggedIn(true))
+    let login_successful = false;
+    // TODO: Check the db if the user already exists then sign in else register
+    axios.post("http://10.154.36.81:5000/login_client", {
+      wallet_address: address,
+    }).then((res) => {
+      if (res.status == 404) {
+        axios.post("http://10.154.36.81:5000/login_client", {
+          wallet_address: address,
+        })
+      }
+    })
+
     // Navigate to the admin page after signing in
     navigate("/admin/task-creation");
   };

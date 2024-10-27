@@ -1,6 +1,7 @@
 // Training.jsx
 
 import React, { useState } from "react";
+import axios from "axios";
 import { Box, Stack, Flex, Input, Button, Text } from "@chakra-ui/react";
 import TrainingTasks from "views/admin/dataTables/components/TrainingTasks";
 import PastTrainingTasks from "views/admin/dataTables/components/PastTrainingTasks";
@@ -11,8 +12,16 @@ export default function Training() {
 
   const handleStake = () => {
     console.log("Stake Action:", { task: selectedTask, tokens });
-    setSelectedTask(null);
-    setTokens("");
+    setSelectedTask(selectedTask);
+    let token_updated;
+    // TODO: Update the wallet id
+    axios.post('http://10.154.36.81:5000/pay_tokens', {
+      wallet_id: 'CNN',
+      tokens: tokens
+    }).then((res) => {
+      token_updated = res.data;
+    });
+    setTokens(token_updated);
   };
 
   return (

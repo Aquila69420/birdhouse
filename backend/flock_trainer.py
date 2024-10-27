@@ -30,7 +30,7 @@ def login():
     Route to login a user based on wallet ID.
     """
     data = request.json
-    wallet_id = data.get('wallet_id')
+    wallet_id = data.get('wallet_address')
     success = token_manager.login(wallet_id)
     if not success:
         return jsonify({"message": f"User {wallet_id} not found"}), 404
@@ -42,7 +42,7 @@ def register():
     Route to register a new client with an initial amount of tokens.
     """
     data = request.json
-    wallet_id = data.get('wallet_id')
+    wallet_id = data.get('wallet_address')
     initial_tokens = data.get('initial_tokens', 10)
     token_manager.register_client(wallet_id, initial_tokens)
     return jsonify({"message": f"User {wallet_id} registered successfully"}), 201

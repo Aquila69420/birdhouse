@@ -25,6 +25,8 @@ import DataTables from 'views/tasks';
 import Validate from 'views/validate';
 import Profile  from 'views/profile';
 import Training from 'views/TrainingPage';
+import Train from 'views/EnvironmentSetup';
+import RunAutomation from 'views/RunAutomation';
 import RTL from 'views/admin/rtl';
 
 // Auth Imports
@@ -69,6 +71,21 @@ const routes = [
     path: '/training',
     component: <Training />,
   },
+  // {
+    
+  //   name: 'Environment Setup',
+  //   layout: '/admin',
+  //   icon: <Icon as={MdPolyline} width="20px" height="20px" color="inherit" />,
+  //   path: '/environment-setup',
+  //   component: <Train />,
+  // },
+  // {
+  //   name: 'Run Automation',
+  //   layout: '/admin',
+  //   icon: <Icon as={MdPolyline} width="20px" height="20px" color="inherit" />,
+  //   path: '/run-automation',
+  //   component: <RunAutomation />,
+  // },
   {
     name: 'Validate',
     layout: '/admin',

@@ -172,7 +172,7 @@ The application should now be accessible in your browser.
 [View Presentation](https://prezi.com/view/vC9ths61d6mv1dR4NQqy/)
 
 ## Video
-[View Demo]([https://prezi.com/view/vC9ths61d6mv1dR4NQqy/](https://youtu.be/dMFcckJwb2I))
+[View Demo](https://youtu.be/dMFcckJwb2I)
 
 <!-- LICENSE -->
 ## License

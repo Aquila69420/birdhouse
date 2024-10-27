@@ -1,38 +1,38 @@
 [
   {
     "task-id": "1",
-    "task-name": "Text2SQL Agent Model",
+    "task-name": "D&D MBTI Chatbot",
     "task-status": "Finalized",
-    "date": "Jul 19, 2024",
+    "date": "May 3, 2024",
     "progress": 100,
     "percentage": 100,
-    "description": "Help develop a model that let people effortlessly query databases using simple, natural language commands, without the need for complex SQL syntax. Whether you're a business analyst, data scientist, or a developer, the Text2SQL model bridges the gap between you and your data, making data retrieval intuitive and efficient. Training data for this task is based on some open-sourced Text2SQL dataset, it may contain some inaccurate queries. The task creator has done extensive cleaning and manual review for the final validation set."
+    "description": "The model will be used for a MBTI test app. The app will provide an immersive Dungeons & Dragons experience when testing the MBTI for the user."
   },
   {
     "task-id": "2",
-    "task-name": "Text2SQL Agent Model",
+    "task-name": "CharacterX - Yae Miko",
     "task-status": "Submission",
-    "date": "Jul 19, 2024",
+    "date": "May 9, 2024",
     "progress": 34,
     "percentage": 4,
-    "description": "The Text2SQL Agent Model is a model that converts natural language questions into SQL queries."
+    "description": "CharacterX requires a model doing role-play. The role it should mimic is Yae Miko from Genshin Impact. The model should be potentially running on user's local device, so it has to be a smaller one."
   },
   {
     "task-id": "3",
-    "task-name": "Text2SQL Agent Model",
+    "task-name": "AI Friend - Loki",
     "task-status": "Finalized",
-    "date": "Jul 19, 2024",
+    "date": "May 21, 2024",
     "progress": 100,
     "percentage": 34,
-    "description": "The Text2SQL Agent Model is a model that converts natural language questions into SQL queries."
+    "description": "Introducing the AI Friend app for Loki from Asgard! Dive into the mischievous mind of Loki with personalized chats and unique adventures. Experience the wit, charm, and cunning of the God of Mischief in a whole new interactive way. Join Loki on his legendary escapades today!"
   },
   {
     "task-id": "4",
-    "task-name": "Text2SQL Agent Model",
+    "task-name": "AI Friend - Hutao",
     "task-status": "Finalized",
-    "date": "Jul 19, 2024",
+    "date": "May 24, 2024",
     "progress": 90,
     "percentage": 45,
-    "description": "The Text2SQL Agent Model is a model that converts natural language questions into SQL queries."
+    "description": "Welcome to Hutao's Tavern! Step into the mystical world of Genshin Impact, where the enigmatic and lively Hutao takes center stage. As the spirited 77th Director of the Wangsheng Funeral Parlor, Hutao is here to captivate you with her charm, wit, and a dash of mischief, just like in the game!"
   }
 ]

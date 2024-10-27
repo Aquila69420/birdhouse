@@ -1,15 +1,17 @@
-// TokenBalanceCard.js
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { Box, Text, useColorModeValue } from "@chakra-ui/react";
 
 const TokenBalanceCard = ({ walletId, tokenAddress }) => {
   const [balance, setBalance] = useState(null);
+  const [error, setError] = useState(false);
   const bgColor = useColorModeValue("white", "gray.800");
 
   useEffect(() => {
     const fetchBalance = async () => {
       try {
+        setError(false); // Reset error state before fetching
+
         // Connect to Ethereum provider (e.g., MetaMask)
         const provider = new ethers.BrowserProvider(window.ethereum);
         
@@ -24,6 +26,7 @@ const TokenBalanceCard = ({ walletId, tokenAddress }) => {
         setBalance(ethers.formatUnits(balance, 18)); // Adjust 18 based on your token's decimals
       } catch (error) {
         console.error("Error fetching balance:", error);
+        setError(true); // Set error state if fetching fails
       }
     };
 
@@ -48,7 +51,7 @@ const TokenBalanceCard = ({ walletId, tokenAddress }) => {
         Current Tokens
       </Text>
       <Text fontSize="2xl" fontWeight="bold" color="blue.500">
-        {balance ? `${balance} $FML` : "Loading..."}
+        {error ? "Invalid wallet" : balance ? `${balance} $FML` : "Loading..."}
       </Text>
     </Box>
   );

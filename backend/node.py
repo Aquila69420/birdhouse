@@ -14,7 +14,7 @@ from client import TokenManager
 
 mongo_uri = "mongodb://localhost:27017/"
 db_name = "token_db"
-token_manager = TokenManager(mongo_uri, db_name)
+token_manager = TokenManager(mongo_uri)
 
 # Initialize the Flask app
 app = Flask(__name__)

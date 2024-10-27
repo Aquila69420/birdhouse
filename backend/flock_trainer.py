@@ -9,10 +9,9 @@ from base64 import b64decode
 from client import TokenManager
 
 # Load the MongoDB URI from the file
-with open ("mongo_uri.txt", "r") as myfile:
+with open ("backend/mongo_uri.txt", "r") as myfile:
     mongo_uri=b64decode(myfile.readline().strip()).decode("utf-8")
-db_name = "token_db"
-token_manager = TokenManager(mongo_uri, db_name)
+token_manager = TokenManager(mongo_uri)
 
 app = Flask(__name__)
 CORS(app)
@@ -73,7 +72,7 @@ def join_network():
     logger.info(f"Node {node_address} joined the network")
     return jsonify({"message": f"{node_address} joined network successfully"}), 200
 
-@app.route('/instantiate_flock_model', methods=['GET'])
+@app.route('/instantiate_flock_model', methods=['POST'])
 def instantiate_flock_model():
     """
     Input route to instantiate a FlockModel.
@@ -88,7 +87,7 @@ def instantiate_flock_model():
     logger.info(f"FlockModel {model_name} instantiated")
     return jsonify({"model_name": model_name, "loss_function_name": loss_function_name}), 201
 
-@app.route('/instantiate_llm_flock_model', methods=['GET'])
+@app.route('/instantiate_llm_flock_model', methods=['POST'])
 def instantiate_llm_flock_model():
     """
     Input route to instantiate an LLMFlockModel.
@@ -96,9 +95,13 @@ def instantiate_llm_flock_model():
     global model
     data = request.json
     model_name = data.get('model_name')
-    model = LLMFlockModel(model_name=model_name, output_dir='.')
-    logger.info(f"LLMFlockModel {model_name} instantiated")
-    return jsonify({"model_name": model_name}), 201
+    try:
+        model = LLMFlockModel(model_name=model_name, output_dir='.')
+        print(f"LLMFlockModel {model_name} instantiated")
+        return jsonify({"model_name": model_name}), 201
+    except Exception as e:
+        print(f"Error instantiating LLMFlockModel: {e}")
+        return jsonify({"error": f"Error instantiating LLMFlockModel: {e}"}), 500
 
 @app.route('/send_llm_flock_model', methods=['POST'])
 def send_llm_flock_model():

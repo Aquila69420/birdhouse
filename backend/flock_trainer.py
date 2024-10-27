@@ -27,6 +27,52 @@ global model
 nodes = set()  # To store connected nodes by their addresses
 weights_dict = {}  # To store weights from all nodes
 
+@app.route('/validate', methods=['POST'])
+def validate():
+    data = request.json
+    task_id = data.get('taskId')
+    flock_api_key = data.get('flockApiKey')
+    hf_token = data.get('hfToken')
+    
+    # Environment variables for the subprocess
+    env = os.environ.copy()
+    env['CUDA_VISIBLE_DEVICES'] = '0'
+    env['FLOCK_API_KEY'] = flock_api_key
+    env['HF_TOKEN'] = hf_token  # Assuming you need this as well for some purpose
+
+    # Define the command to be executed
+    command = [
+        "python", "backend/src/validate.py", "validate",
+        "--model_name_or_path", "Qwen/Qwen1.5-1.8B-Chat",
+        "--base_model", "qwen1.5",
+        "--eval_file", "backend/src/data/dummy_data.jsonl",
+        "--context_length", "128",
+        "--max_params", "7000000000",
+        "--assignment_id", task_id,
+        "--validation_args_file", "backend/src/validation_config.json.example"
+    ]
+
+    try:
+        # Run the command and capture output
+        result = subprocess.run(command, capture_output=True, text=True, env=env, check=True)
+        
+        # Prepare JSON response with stdout and stderr
+        response = {
+            "status": "success",
+            "output": result.stdout,
+            "error": result.stderr
+        }
+    except subprocess.CalledProcessError as e:
+        # Return error output if command fails
+        response = {
+            "status": "failure",
+            "output": e.stdout,
+            "error": e.stderr
+        }
+    
+    print(response)
+    return jsonify(response)
+
 @app.route('/execute', methods=['POST'])
 def execute_command():
     data = request.json
@@ -52,7 +98,7 @@ def execute_command():
         # Send the output and error (if any) as JSON response or print to console
         print("Output:", result.stdout)
         print("Error:", result.stderr)
-        return jsonify({"output": result.stdout, "error": result.stderr}, 200)
+        return jsonify({"output": result.stdout, "error": result.stderr}), 200
     except Exception as e:
         print("Exception:", str(e))
         return jsonify({"error": str(e)}), 500

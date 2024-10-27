@@ -11,9 +11,23 @@ import {
 } from '@chakra-ui/react';
 import initialTheme from './theme/theme'; //  { themeGreen }
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+
+
 // Chakra imports
 
 export default function Main() {
+  const isLoggedIn = useSelector((state) => state.person.isLoggedIn);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect to login page if not logged in
+    if (!isLoggedIn) {
+      navigate('/');
+    }
+  }, [isLoggedIn, navigate]);
   // eslint-disable-next-line
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
   return (

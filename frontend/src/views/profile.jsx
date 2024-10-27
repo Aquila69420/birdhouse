@@ -4,16 +4,21 @@ import React from 'react';
 import { Box, Grid } from "@chakra-ui/react";
 import ProfileInfoCard from "views/admin/dataTables/components/ProfileInfoCard";
 import TokenBalanceCard from "views/admin/dataTables/components/TokenBalanceCard";
+import { useDispatch, useSelector } from 'react-redux';
 
 // Placeholder for user data
-const userData = {
-  name: "Adela Parkson",
-  walletId: "0x1234...abcd",
-  tokens: 1250,
-  avatarSrc: "assets/img/avatars/avatar4.png"  // Use a path to the avatar image
-};
+
 
 export default function Profile() {
+  const storedName = useSelector((state) => state.person.name);
+  const storedAddress = useSelector((state) => state.person.address);
+  
+  const userData = { 
+    name: storedName,
+    walletId: storedAddress,
+    tokens: 1250,
+    avatarSrc: "assets/img/avatars/avatar4.png"  // Use a path to the avatar image
+  };
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <Grid

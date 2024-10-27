@@ -14,6 +14,8 @@ This repository hosts the code for Birdhouse, a decentralized Federated Learning
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Usage](#usage)
+- [Presentation](#presentation)
+- [Video](#video)
 - [License](#license)
 
 
@@ -30,6 +32,31 @@ This repository hosts the code for Birdhouse, a decentralized Federated Learning
    * model_classes.py
    * mongo_url.txt
    * node.py
+   * utils/
+      * constants.py
+      * flock_api.py
+      * gpu_utils.py
+   * ui_cmd_line/
+   * .pre-commit-config.yaml
+   * full_automation.py
+   * merge.py
+   * training_args.yaml
+   * src/
+      * client/
+         * \_\_init\_\_.py
+         * fed_ledger.py
+      * core/
+         * collator.py
+         * dataset.py
+         * exception.py
+         * gpu_utils.py
+         * template.py
+      * data/
+         * dummy_data.jsonl
+      * start.sh
+      * .env
+      * validate.py
+      * validation_config.json.example
  * /frontend
    * public/
    * src/
@@ -140,6 +167,12 @@ This structure, inspired by the Flock.io framework, provides a robust system for
    ```
 
 The application should now be accessible in your browser.
+
+## Presentation
+[View Presentation](https://prezi.com/view/vC9ths61d6mv1dR4NQqy/)
+
+## Video
+[View Demo](https://prezi.com/view/vC9ths61d6mv1dR4NQqy/)
 
 <!-- LICENSE -->
 ## License

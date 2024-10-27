@@ -25,20 +25,17 @@ export default function Settings() {
           break;
         case "CNN":
           await axios.post('http://10.154.36.81:5000/instantiate_flock_model', {
-            model_name: 'CNN',
-            loss_function: 'CE'
+            model_name: 'gpt2',
           });
           break;
         case "LR":
           await axios.post('http://10.154.36.81:5000/instantiate_flock_model', {
-            model_name: 'LR',
-            loss_function: 'BCE'
+            model_name: 'gpt2',
           });
           break;
         case "DT":
           await axios.post('http://10.154.36.81:5000/instantiate_flock_model', {
-            model_name: 'DT',
-            loss_function: 'MSE'
+            model_name: 'gpt2',
           });
           break;
         default:
@@ -55,8 +52,6 @@ export default function Settings() {
         "task-name": taskData.name,
         "task-status": "Submission",
         "date": new Date().toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }),
-        "progress": 0,
-        "percentage": 0,
         "description": taskData.description || ""
       };
       

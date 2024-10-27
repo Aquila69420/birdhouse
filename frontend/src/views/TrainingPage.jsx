@@ -1,74 +1,60 @@
-// Chakra and React Imports
-import { Box, Button, Checkbox, CheckboxGroup, SimpleGrid, Stack, Text } from "@chakra-ui/react";
-import { useState } from "react";
-import axios from "axios";
+// Training.jsx
 
-// Import your tables and data
-import DevelopmentTable from "views/admin/dataTables/components/DevelopmentTable";
-import CheckTable from "views/admin/dataTables/components/CheckTable";
-import ColumnsTable from "views/admin/dataTables/components/ColumnsTable";
-import ComplexTable from "views/admin/dataTables/components/ComplexTable";
-import {
-  columnsDataDevelopment,
-  columnsDataCheck,
-  columnsDataColumns,
-  columnsDataComplex,
-} from "views/admin/dataTables/variables/columnsData";
-import tableDataDevelopment from "views/admin/dataTables/variables/tableDataDevelopment.json";
-import tableDataCheck from "views/admin/dataTables/variables/tableDataCheck.json";
-import tableDataColumns from "views/admin/dataTables/variables/tableDataColumns.json";
-import tableDataComplex from "views/admin/dataTables/variables/tableDataComplex.json";
+import React, { useState } from "react";
+import { Box, Stack, Flex, Input, Button, Text } from "@chakra-ui/react";
+import TrainingTasks from "views/admin/dataTables/components/TrainingTasks";
+import PastTrainingTasks from "views/admin/dataTables/components/PastTrainingTasks";
 
 export default function Training() {
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [tokens, setTokens] = useState("");
 
-  // Function to handle API call
-  const handleTrain = async () => {
-    try {
-      const response = await axios.post("/api/train", { items: selectedItems });
-      console.log("Training response:", response.data);
-      // Handle any response or feedback here
-    } catch (error) {
-      console.error("Error during training:", error);
-    }
+  const handleStake = () => {
+    console.log("Stake Action:", { task: selectedTask, tokens });
+    setSelectedTask(null);
+    setTokens("");
   };
 
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <SimpleGrid mb="20px" columns={{ sm: 1, md: 2 }} spacing={{ base: "20px", xl: "20px" }}>
-        <DevelopmentTable columnsData={columnsDataDevelopment} tableData={tableDataDevelopment} />
-        <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
-        <ColumnsTable columnsData={columnsDataColumns} tableData={tableDataColumns} />
-        <ComplexTable columnsData={columnsDataComplex} tableData={tableDataComplex} />
-      </SimpleGrid>
+    <Box pt={{ base: "130px", md: "80px", xl: "80px" }} h="100vh" overflow="auto">
+      <Stack spacing="20px">
+        
+        {/* Current Training Tasks Table */}
+        <Box>
+          <TrainingTasks onTaskSelect={setSelectedTask} />
+          
+          {selectedTask && (
+            <Flex direction="column" mt="4" align="center" w="100%">
+              <Text fontSize="lg" fontWeight="600" mb="2">
+                Stake Tokens for Selected Task
+              </Text>
+              <Input
+                placeholder="Enter tokens amount"
+                type="number"
+                value={tokens}
+                onChange={(e) => setTokens(e.target.value)}
+                width="300px"
+                mb="4"
+              />
+              <Button
+                colorScheme="brandScheme"
+                bg="brand.500"
+                color="white"
+                onClick={handleStake}
+                _hover={{ bg: "brand.600" }}
+                _active={{ bg: "brand.700" }}
+              >
+                Stake FML
+              </Button>
+            </Flex>
+          )}
+        </Box>
 
-      {/* Training Button and Checklist */}
-      <Box mb="20px">
-        <Text fontSize="lg" fontWeight="bold" mb="10px">
-          Select Training Options:
-        </Text>
-        <CheckboxGroup
-          colorScheme="green"
-          onChange={setSelectedItems}
-          value={selectedItems}
-        >
-          <Stack spacing={2}>
-            <Checkbox value="Option 1">Option 1</Checkbox>
-            <Checkbox value="Option 2">Option 2</Checkbox>
-            <Checkbox value="Option 3">Option 3</Checkbox>
-            {/* Add more options as needed */}
-          </Stack>
-        </CheckboxGroup>
-
-        <Button
-          mt="20px"
-          colorScheme="teal"
-          onClick={handleTrain}
-          isDisabled={selectedItems.length === 0}
-        >
-          Start Training
-        </Button>
-      </Box>
+        {/* Past Training Tasks Section */}
+        <Box>
+          <PastTrainingTasks />
+        </Box>
+      </Stack>
     </Box>
   );
 }

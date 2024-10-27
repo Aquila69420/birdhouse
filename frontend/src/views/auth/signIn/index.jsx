@@ -31,15 +31,17 @@ function SignIn() {
 
   const handleSignIn = () => {
     // Dispatching to update Redux state
+    
     dispatch(setName(name));
     dispatch(setAddress(address));
-    axios.post("http://10.154.36.81:5000/login_client", {
-      wallet_address: address,
-    }).then((res) => {
-      if (res.status !== 404) {
-        dispatch(setIsLoggedIn(true));
-      }
-    });
+    dispatch(setIsLoggedIn(true));
+    // axios.post("http://10.154.36.81:5000/login_client", {
+    //   wallet_address: address,
+    // }).then((res) => {
+    //   if (res.status !== 404) {
+    //     dispatch(setIsLoggedIn(true));
+    //   }
+    // });
 
     // Navigate to the admin page after signing in
     navigate("/admin/task-creation");

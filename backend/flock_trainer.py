@@ -33,19 +33,25 @@ def login():
     wallet_id = data.get('wallet_address')
     success = token_manager.login(wallet_id)
     if not success:
-        return jsonify({"message": f"User {wallet_id} not found"}), 404
+        initial_tokens = data.get('initial_tokens', 10)
+        token_manager.register_client(wallet_id, initial_tokens)
+        success_v2 = token_manager.login(wallet_id)
+        if success_v2:
+            return jsonify({"message": f"User {wallet_id} registered and logged in successfully"}), 201
+        else:
+            return jsonify({"message": f"User {wallet_id} not found"}), 404
     return jsonify({"message": f"User {wallet_id} logged in successfully"}), 200
 
-@app.route('/register_client', methods=['POST'])
-def register():
-    """
-    Route to register a new client with an initial amount of tokens.
-    """
-    data = request.json
-    wallet_id = data.get('wallet_address')
-    initial_tokens = data.get('initial_tokens', 10)
-    token_manager.register_client(wallet_id, initial_tokens)
-    return jsonify({"message": f"User {wallet_id} registered successfully"}), 201
+# @app.route('/register_client', methods=['POST'])
+# def register():
+#     """
+#     Route to register a new client with an initial amount of tokens.
+#     """
+#     data = request.json
+#     wallet_id = data.get('wallet_address')
+#     initial_tokens = data.get('initial_tokens', 10)
+#     token_manager.register_client(wallet_id, initial_tokens)
+#     return jsonify({"message": f"User {wallet_id} registered successfully"}), 201
 
 @app.route('/pay_tokens', methods=['POST'])
 def pay_tokens():

@@ -33,18 +33,13 @@ function SignIn() {
     // Dispatching to update Redux state
     dispatch(setName(name));
     dispatch(setAddress(address));
-    dispatch(setIsLoggedIn(true))
-    let login_successful = false;
-    // TODO: Check the db if the user already exists then sign in else register
     axios.post("http://10.154.36.81:5000/login_client", {
       wallet_address: address,
     }).then((res) => {
-      if (res.status == 404) {
-        axios.post("http://10.154.36.81:5000/login_client", {
-          wallet_address: address,
-        })
+      if (res.status != 400) {
+        dispatch(setIsLoggedIn(true));
       }
-    })
+    });
 
     // Navigate to the admin page after signing in
     navigate("/admin/task-creation");

@@ -501,8 +501,6 @@ export const BirdHouseIcon = createIcon({
   ),
 });
 
-
-
 export const SupportIcon = createIcon({
   // Doesn't display the full icon without w and h being specified
   displayName: "BuildIcon",

@@ -19,6 +19,7 @@
     "@testing-library/user-event": "^14.5.2",
     "apexcharts": "3.50.0",
     "axios": "^1.7.7",
+    "ethers": "^6.13.4",
     "framer-motion": "^11.11.10",
     "idb": "^8.0.0",
     "npm-force-resolutions": "^0.0.10",

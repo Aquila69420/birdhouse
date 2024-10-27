@@ -472,6 +472,35 @@ export const HorizonLogo = createIcon({
   ),
 });
 
+export const BirdHouseIcon = createIcon({
+  displayName: "BirdHouseIcon",
+  viewBox: "0 0 1920 1080",
+  path: (
+    <g>
+      <g transform="matrix(1,0,0,1,420.311,40.693)">
+        <text x="268.569px" y="549.707px" style={{ fontFamily: "'Poppins-Bold', 'Poppins'", fontWeight: 700, fontSize: "144px" }}>
+          BIRD
+        </text>
+        <text x="604.521px" y="549.707px" style={{ fontFamily: "'Poppins-Light', 'Poppins'", fontWeight: 300, fontSize: "144px" }}>
+          HOUSE
+        </text>
+      </g>
+      <g transform="matrix(0.417123,0,0,0.417123,101.056,336.426)">
+        <path
+          d="M993.096,659.799C1114.18,659.799 1157.9,544.024 1154.09,493.99C1145.52,381.397 1184.79,366.853 1184.79,366.853C1184.79,366.853 1163.6,365.006 1150.97,373.66C1139.13,359.561 1084.21,352.953 1055.75,383.208C1002.31,440.026 1051.28,463.296 852.909,605.164C869.644,626.44 974.958,662.75 1034.31,600.485C1084.04,548.31 1083.05,501.929 1083.05,501.929"
+          style={{ fill: "none", stroke: "black", strokeWidth: "22.78px" }}
+        />
+        <g transform="matrix(1,0,0,1,14.9762,0)">
+          <path
+            d="M978.12,659.799L978.12,726.555L1234.61,726.555L1234.61,348.957L1018.85,164.802L803.084,348.957L803.084,726.555"
+            style={{ fill: "none", stroke: "black", strokeWidth: "22.78px" }}
+          />
+        </g>
+      </g>
+    </g>
+  ),
+});
+
 export const SupportIcon = createIcon({
   // Doesn't display the full icon without w and h being specified
   displayName: "BuildIcon",

@@ -2,11 +2,14 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pickle
 import logging
+import subprocess
 from flock_model import FlockModel
 from llm_flock_model import LLMFlockModel
 import requests
 from base64 import b64decode
 from client import TokenManager
+import subprocess
+import os
 
 # Load the MongoDB URI from the file
 with open ("backend/mongo_uri.txt", "r") as myfile:
@@ -24,6 +27,37 @@ global model
 nodes = set()  # To store connected nodes by their addresses
 weights_dict = {}  # To store weights from all nodes
 
+@app.route('/execute', methods=['POST'])
+def execute_command():
+    data = request.json
+    task_id = data.get('taskId')
+    flock_api_key = data.get('flockApiKey')
+    hf_token = data.get('hfToken')
+    hf_username = data.get('hfUsername')
+    try:
+        # Set environment variables
+        env_vars = os.environ.copy()
+        env_vars["TASK_ID"] = task_id
+        env_vars["FLOCK_API_KEY"] = flock_api_key
+        env_vars["HF_TOKEN"] = hf_token
+        env_vars["CUDA_VISIBLE_DEVICES"] = "0"
+        env_vars["HF_USERNAME"] = hf_username
+
+        # Command to execute
+        command = "python backend/full_automation.py"
+
+        # Use subprocess to execute the command and capture output
+        result = subprocess.run(command, shell=True, text=True, capture_output=True, env=env_vars)
+
+        # Send the output and error (if any) as JSON response or print to console
+        print("Output:", result.stdout)
+        print("Error:", result.stderr)
+        return jsonify({"output": result.stdout, "error": result.stderr}, 200)
+    except Exception as e:
+        print("Exception:", str(e))
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route('/login_client', methods=['POST'])
 def login():
     """
@@ -40,17 +74,6 @@ def login():
             return jsonify({"message": f"User {wallet_id} registered and logged in successfully"}), 201
         return jsonify({"message": f"User {wallet_id} not found"}), 404
     return jsonify({"message": f"User {wallet_id} logged in successfully"}), 200
-
-# @app.route('/register_client', methods=['POST'])
-# def register():
-#     """
-#     Route to register a new client with an initial amount of tokens.
-#     """
-#     data = request.json
-#     wallet_id = data.get('wallet_address')
-#     initial_tokens = data.get('initial_tokens', 10)
-#     token_manager.register_client(wallet_id, initial_tokens)
-#     return jsonify({"message": f"User {wallet_id} registered successfully"}), 201
 
 @app.route('/pay_tokens', methods=['POST'])
 def pay_tokens():

@@ -3,38 +3,69 @@ import { Box, SimpleGrid } from "@chakra-ui/react";
 import ComplexTable from "views/admin/dataTables/components/ComplexTable";
 import TaskCreationCard from "views/admin/dataTables/components/TaskCreationCard"; // Import the TaskCreationCard
 import { columnsDataComplex } from "views/admin/dataTables/variables/columnsData";
-import tableDataComplex from "views/admin/dataTables/variables/tableDataComplex.json";
-import React from "react";
+import tableDataComplexJson from "views/admin/dataTables/variables/tableDataComplex.json"; // Import JSON as initial data
+import React, { useState } from "react";
 import axios from "axios";
 
 export default function Settings() {
-  // Handle task creation (e.g., add to table or call an API)
-  const handleCreateTask = (taskData) => {
+  // Use state to manage table data so it can be updated dynamically
+  const [tableDataComplex, setTableDataComplex] = useState(tableDataComplexJson);
+
+  // Handle task creation
+  const handleCreateTask = async (taskData) => {
     console.log("New Task Created:", taskData);
-    switch(taskData.model) {
-      case "LLM":
-        axios.post('http://10.154.36.81:5000/instantiate_llm_flock_model', {
-          model_name: 'gpt2'
-        })
-      break;
-      case "CNN":
-        axios.post('http://10.154.36.81:5000/instantiate_flock_model', {
-          model_name: 'CNN',
-          loss_function: 'CE'
-        })
-        break;
-      case "CNN":
-        axios.post('http://10.154.36.81:5000/instantiate_flock_model', {
-          model_name: 'LR',
-          loss_function: 'BCE'
-        })
-        break;
-      case "DT":
-        axios.post('http://10.154.36.81:5000/instantiate_flock_model', {
+
+    // API request depending on the selected model
+    try {
+      switch (taskData.model) {
+        case "LLM":
+          await axios.post('http://10.154.36.81:5000/instantiate_llm_flock_model', {
+            model_name: 'gpt2'
+          });
+          break;
+        case "CNN":
+          await axios.post('http://10.154.36.81:5000/instantiate_flock_model', {
+            model_name: 'CNN',
+            loss_function: 'CE'
+          });
+          break;
+        case "LR":
+          await axios.post('http://10.154.36.81:5000/instantiate_flock_model', {
+            model_name: 'LR',
+            loss_function: 'BCE'
+          });
+          break;
+        case "DT":
+          await axios.post('http://10.154.36.81:5000/instantiate_flock_model', {
             model_name: 'DT',
             loss_function: 'MSE'
-        })
-        break;
+          });
+          break;
+        default:
+          console.warn("Unknown model type");
+          return;
+      }
+
+      // Find the maximum task-id in the current data and increment it by 1
+      const newTaskId = (Math.max(...tableDataComplex.map(task => parseInt(task["task-id"])), 0) + 1).toString();
+
+      // Format the new task with the same structure
+      const newTask = {
+        "task-id": newTaskId,
+        "task-name": taskData.model,
+        "task-status": "Submission",
+        "date": new Date().toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }),
+        "progress": 0,
+        "percentage": 0,
+        "description": taskData.description || ""
+      };
+      
+      // Update table data with the new task
+      setTableDataComplex((prevData) => [...prevData, newTask]);
+
+    } catch (error) {
+      console.error("Error creating task:", error);
+      alert("Failed to create task. Please try again.");
     }
   };
 
@@ -52,7 +83,7 @@ export default function Settings() {
         {/* Task creation card */}
         <TaskCreationCard onCreateTask={handleCreateTask} />
         
-        {/* Table component */}
+        {/* Table component with updated tableData */}
         <ComplexTable
           columnsData={columnsDataComplex}
           tableData={tableDataComplex}

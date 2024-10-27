@@ -76,13 +76,13 @@ const routes = [
     path: '/data-tables2',
     component: <Validate />,
   },
-  {
-    name: 'Delegate',
-    layout: '/admin',
-    icon: <Icon as={MdScheduleSend} width="20px" height="20px" color="inherit" />,
-    path: '/data-tables3',
-    component: <DataTables />,
-  },
+  // {
+  //   name: 'Delegate',
+  //   layout: '/admin',
+  //   icon: <Icon as={MdScheduleSend} width="20px" height="20px" color="inherit" />,
+  //   path: '/data-tables3',
+  //   component: <DataTables />,
+  // },
   {
     name: 'Profile',
     layout: '/admin',

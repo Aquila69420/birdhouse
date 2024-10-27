@@ -1,20 +1,28 @@
 import React from "react";
-
-// Chakra imports
-import { Flex, useColorModeValue } from "@chakra-ui/react";
-
-// Custom components
-import { HorizonLogo } from "components/icons/Icons";
+import { Flex, useColorModeValue, Box } from "@chakra-ui/react";
+import { BirdHouseIcon } from "components/icons/Icons";
 import { HSeparator } from "components/separator/Separator";
 
 export function SidebarBrand() {
-  //   Chakra color mode
   let logoColor = useColorModeValue("navy.700", "white");
 
   return (
-    <Flex align='center' direction='column'>
-      <HorizonLogo h='26px' w='175px' my='32px' color={logoColor} />
-      <HSeparator mb='20px' />
+    <Flex align="center" direction="column" position="relative" overflow="hidden">
+      {/* Wrapper box to control icon size and cropping */}
+      <Box
+        w="auto"
+        h="100px" // Limit height to control vertical space
+        overflow="hidden" // Hide excess whitespace
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        p="0" 
+        mt="-10px" // Negative margin to further reduce whitespace
+        mb="-10px" // Negative margin for bottom as well
+      >
+        <BirdHouseIcon h="200px" w="auto" color={logoColor} transform="scale(1.2)" /> {/* Apply scaling */}
+      </Box>
+      <HSeparator mb="20px" />
     </Flex>
   );
 }

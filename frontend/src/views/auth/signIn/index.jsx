@@ -34,7 +34,7 @@ function SignIn() {
     dispatch(setAddress(address));
     dispatch(setIsLoggedIn(true))
     // Navigate to the admin page after signing in
-    navigate("/admin");
+    navigate("/admin/task-creation");
   };
 
   const textColor = useColorModeValue("navy.700", "white");

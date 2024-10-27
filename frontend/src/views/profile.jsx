@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // Placeholder for user data
 
-
 export default function Profile() {
   const storedName = useSelector((state) => state.person.name);
   const storedAddress = useSelector((state) => state.person.address);
@@ -16,8 +15,7 @@ export default function Profile() {
   const userData = { 
     name: storedName,
     walletId: storedAddress,
-    tokens: 1250,
-    avatarSrc: "assets/img/avatars/avatar4.png"  // Use a path to the avatar image
+    tokens: 1250, // Use a path to the avatar image
   };
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>

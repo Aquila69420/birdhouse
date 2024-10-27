@@ -15,7 +15,6 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 
-
 // Chakra imports
 
 export default function Main() {

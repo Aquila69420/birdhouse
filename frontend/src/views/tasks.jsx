@@ -52,7 +52,7 @@ export default function Settings() {
       // Format the new task with the same structure
       const newTask = {
         "task-id": newTaskId,
-        "task-name": taskData.model,
+        "task-name": taskData.name,
         "task-status": "Submission",
         "date": new Date().toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }),
         "progress": 0,

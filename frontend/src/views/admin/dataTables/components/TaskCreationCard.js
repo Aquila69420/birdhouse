@@ -15,6 +15,7 @@ import Card from "components/card/Card"; // Import your Card component
 
 const TaskCreationCard = ({ onCreateTask }) => {
   const [model, setModel] = useState("LLM"); // Default model set to LLM
+  const [name, setName] = useState(""); // New name field state
   const [parameters, setParameters] = useState({
     layers: "",
     tokens: "",
@@ -46,11 +47,12 @@ const TaskCreationCard = ({ onCreateTask }) => {
   };
 
   const handleCreateTask = () => {
-    const taskData = { model, parameters, description };
+    const taskData = { model, name, parameters, description }; // Include name in taskData
     onCreateTask(taskData);
     // Reset fields
     setModel("LLM"); // Reset to default LLM
     setParameters(modelParameters["LLM"]);
+    setName("");
     setDescription("");
   };
 
@@ -68,6 +70,19 @@ const TaskCreationCard = ({ onCreateTask }) => {
     >
       <FormControl mb="4">
         <FormLabel fontWeight="600" color={textColor}>
+          Task Name
+        </FormLabel>
+        <Input
+          variant="outline"
+          fontSize="sm"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter task name"
+        />
+      </FormControl>
+
+      <FormControl mb="4">
+        <FormLabel fontWeight="600" color={textColor}>
           Model
         </FormLabel>
         <Select
@@ -75,7 +90,6 @@ const TaskCreationCard = ({ onCreateTask }) => {
           fontSize="sm"
           value={model}
           onChange={handleModelChange}
-          placeholder="Select model"
         >
           <option value="CNN">CNN</option>
           <option value="LR">Logistic Regression</option>

@@ -93,7 +93,7 @@ This repository hosts the code for Birdhouse, a decentralized Federated Learning
 
 ## Flock.io Principles
 
-The Flock.io framework is designed to democratize and decentralize AI model training, making high-quality machine learning accessible and secure for users worldwide. This project leverages key Flock.io principles, integrating them into a decentralized platform that promotes equitable access, incentivization, and robust security for federated learning. Below are the core principles of Flock.io that we implement in this project:
+The Flock.io framework is designed to democratize and decentralize AI model training, making high-quality machine learning accessible and secure for users worldwide. This project leverages key Flock.io principles, integrating them into a decentralized platform that promotes equitable access, incentivization, and robust security for federated learning. Below are the core principles of Flock.io, inspired from the [whitepaper](https://www.flock.io/whitepaper) that we implement in this project:
 
 ### 1. AI Arena
 The **AI Arena** is the core environment where federated learning tasks are managed and executed. In this system, users can submit model training tasks, which are distributed across multiple nodes in a decentralized manner. The arena allows users to select a model architecture and adjust hyperparameters. The training workload is divided among nodes (Training Nodes), and upon task completion, the aggregated model is evaluated and prepared for deployment. This approach provides:
